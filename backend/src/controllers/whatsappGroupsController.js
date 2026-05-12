@@ -2,7 +2,7 @@ const { v4: uuidv4 } = require('uuid');
 const pool = require('../config/database');
 
 async function getAll(req, res) {
-  const [rows] = await pool.query(
+  const { rows } = await pool.query(
     `SELECT wg.*, u.full_name as added_by_name
      FROM whatsapp_groups wg
      LEFT JOIN users u ON wg.added_by = u.id
@@ -12,8 +12,8 @@ async function getAll(req, res) {
 }
 
 async function getById(req, res) {
-  const [rows] = await pool.query(
-    `SELECT wg.*, u.full_name as added_by_name FROM whatsapp_groups wg LEFT JOIN users u ON wg.added_by = u.id WHERE wg.id = ?`,
+  const { rows } = await pool.query(
+    `SELECT wg.*, u.full_name as added_by_name FROM whatsapp_groups wg LEFT JOIN users u ON wg.added_by = u.id WHERE wg.id = $1`,
     [req.params.id]
   );
   if (!rows.length) return res.status(404).json({ error: 'Not found' });
@@ -24,29 +24,26 @@ async function create(req, res) {
   const { group_name, group_link, admin_whatsapp, group_members, group_type, activity_status } = req.body;
   if (!group_name) return res.status(400).json({ error: 'group_name required' });
 
-  const id = uuidv4();
-  await pool.query(
+  const { rows } = await pool.query(
     `INSERT INTO whatsapp_groups (id, group_name, group_link, admin_whatsapp, group_members, group_type, activity_status, added_by)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    [id, group_name, group_link, admin_whatsapp, group_members || 0, group_type, activity_status, req.user.id]
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+    [uuidv4(), group_name, group_link, admin_whatsapp, group_members || 0, group_type, activity_status, req.user.id]
   );
-  const [rows] = await pool.query('SELECT * FROM whatsapp_groups WHERE id = ?', [id]);
   res.status(201).json(rows[0]);
 }
 
 async function update(req, res) {
   const { group_name, group_link, admin_whatsapp, group_members, group_type, activity_status } = req.body;
-  await pool.query(
-    `UPDATE whatsapp_groups SET group_name=?, group_link=?, admin_whatsapp=?, group_members=?, group_type=?, activity_status=?
-     WHERE id=?`,
+  const { rows } = await pool.query(
+    `UPDATE whatsapp_groups SET group_name=$1, group_link=$2, admin_whatsapp=$3, group_members=$4, group_type=$5, activity_status=$6
+     WHERE id=$7 RETURNING *`,
     [group_name, group_link, admin_whatsapp, group_members || 0, group_type, activity_status, req.params.id]
   );
-  const [rows] = await pool.query('SELECT * FROM whatsapp_groups WHERE id = ?', [req.params.id]);
   res.json(rows[0]);
 }
 
 async function remove(req, res) {
-  await pool.query('DELETE FROM whatsapp_groups WHERE id = ?', [req.params.id]);
+  await pool.query('DELETE FROM whatsapp_groups WHERE id = $1', [req.params.id]);
   res.json({ message: 'Deleted' });
 }
 
