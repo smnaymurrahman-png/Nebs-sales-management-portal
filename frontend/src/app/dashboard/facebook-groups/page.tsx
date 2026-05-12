@@ -6,10 +6,13 @@ import api from '@/lib/api';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
 
+const GROUP_TYPES = ['Data and leads', 'Targeted database group', 'Other business group', 'Review group'];
+const GROUP_CONDITIONS = ['Low', 'Below Average', 'Average', 'Good', 'Very Good'];
+
 interface FBGroup {
   id: string; group_name: string; group_link: string; group_type: string;
   group_members: number; group_current_status: string; owner_fb_id_name: string;
-  owner_fb_id_link: string; backup_group_link: string; group_status: string;
+  owner_fb_id_link: string; backup_group_link: string; group_condition: string;
   admins: string[]; added_by_name: string;
 }
 
@@ -19,7 +22,7 @@ function Modal({ onClose, group, onSaved }: { onClose: () => void; group?: FBGro
     group_type: group?.group_type || '', group_members: group?.group_members || 0,
     group_current_status: group?.group_current_status || '', owner_fb_id_name: group?.owner_fb_id_name || '',
     owner_fb_id_link: group?.owner_fb_id_link || '', backup_group_link: group?.backup_group_link || '',
-    group_status: group?.group_status || '', admins: group?.admins || [''],
+    group_condition: group?.group_condition || '', admins: group?.admins || [''],
   });
   const [loading, setLoading] = useState(false);
 
@@ -48,17 +51,41 @@ function Modal({ onClose, group, onSaved }: { onClose: () => void; group?: FBGro
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            {[['Group Name *', 'group_name'], ['Group Link', 'group_link'], ['Group Type', 'group_type'],
-              ['Group Members', 'group_members', 'number'], ['Current Status', 'group_current_status'],
-              ['Group Status', 'group_status']].map(([label, key, type]) => (
+            {[['Group Name *', 'group_name'], ['Group Link', 'group_link']].map(([label, key]) => (
               <div key={key}>
                 <label className="block text-xs text-slate-400 mb-1">{label}</label>
-                <input type={type as string || 'text'} value={(form as any)[key]}
-                  onChange={e => setField(key, type === 'number' ? Number(e.target.value) : e.target.value)}
+                <input value={(form as any)[key]} onChange={e => setField(key, e.target.value)}
                   required={key === 'group_name'}
                   className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
               </div>
             ))}
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Group Type</label>
+              <select value={form.group_type} onChange={e => setField('group_type', e.target.value)}
+                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+                <option value="">Select type</option>
+                {GROUP_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Group Members</label>
+              <input type="number" value={form.group_members}
+                onChange={e => setField('group_members', parseInt(e.target.value) || 0)}
+                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Current Status</label>
+              <input value={form.group_current_status} onChange={e => setField('group_current_status', e.target.value)}
+                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Group Condition</label>
+              <select value={form.group_condition} onChange={e => setField('group_condition', e.target.value)}
+                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+                <option value="">Select condition</option>
+                {GROUP_CONDITIONS.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             {[['Owner FB ID Name', 'owner_fb_id_name'], ['Owner FB ID Link', 'owner_fb_id_link'], ['Backup Group Link', 'backup_group_link']].map(([label, key]) => (
@@ -142,7 +169,7 @@ export default function FacebookGroupsPage() {
                   <th className="px-4 py-3 text-left">Group Name</th>
                   <th className="px-4 py-3 text-left">Type</th>
                   <th className="px-4 py-3 text-left">Members</th>
-                  <th className="px-4 py-3 text-left">Status</th>
+                  <th className="px-4 py-3 text-left">Condition</th>
                   <th className="px-4 py-3 text-left">Owner</th>
                   <th className="px-4 py-3 text-left">Admins</th>
                   <th className="px-4 py-3 text-left">Added By</th>
@@ -173,7 +200,12 @@ export default function FacebookGroupsPage() {
                     <td className="px-4 py-3">
                       <div className="space-y-0.5">
                         {g.group_current_status && <p className="text-xs text-slate-300">{g.group_current_status}</p>}
-                        {g.group_status && <span className={cn('text-xs px-1.5 py-0.5 rounded', g.group_status === 'Active' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-700 text-slate-400')}>{g.group_status}</span>}
+                        {g.group_condition && <span className={cn('text-xs px-1.5 py-0.5 rounded',
+                          g.group_condition === 'Very Good' ? 'bg-emerald-500/20 text-emerald-300' :
+                          g.group_condition === 'Good' ? 'bg-green-500/20 text-green-300' :
+                          g.group_condition === 'Average' ? 'bg-yellow-500/20 text-yellow-300' :
+                          g.group_condition === 'Below Average' ? 'bg-orange-500/20 text-orange-300' :
+                          'bg-red-500/20 text-red-300')}>{g.group_condition}</span>}
                       </div>
                     </td>
                     <td className="px-4 py-3">

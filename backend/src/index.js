@@ -99,11 +99,13 @@ async function initDB() {
       owner_fb_id_link VARCHAR(1000),
       backup_group_link VARCHAR(1000),
       group_status VARCHAR(100),
+      group_condition VARCHAR(100),
       added_by VARCHAR(36) REFERENCES users(id) ON DELETE SET NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
+  await pool.query(`ALTER TABLE facebook_groups ADD COLUMN IF NOT EXISTS group_condition VARCHAR(100)`);
   await pool.query(`
     CREATE TABLE IF NOT EXISTS facebook_group_admins (
       id VARCHAR(36) PRIMARY KEY,

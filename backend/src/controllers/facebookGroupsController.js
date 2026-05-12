@@ -30,17 +30,17 @@ async function getById(req, res) {
 async function create(req, res) {
   const {
     group_name, group_link, group_type, group_members, group_current_status,
-    owner_fb_id_name, owner_fb_id_link, backup_group_link, group_status, admins
+    owner_fb_id_name, owner_fb_id_link, backup_group_link, group_condition, admins
   } = req.body;
   if (!group_name) return res.status(400).json({ error: 'group_name required' });
 
   const id = uuidv4();
   await pool.query(
     `INSERT INTO facebook_groups (id, group_name, group_link, group_type, group_members, group_current_status,
-     owner_fb_id_name, owner_fb_id_link, backup_group_link, group_status, added_by)
+     owner_fb_id_name, owner_fb_id_link, backup_group_link, group_condition, added_by)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
     [id, group_name, group_link, group_type, group_members || 0, group_current_status,
-     owner_fb_id_name, owner_fb_id_link, backup_group_link, group_status, req.user.id]
+     owner_fb_id_name, owner_fb_id_link, backup_group_link, group_condition, req.user.id]
   );
 
   if (Array.isArray(admins) && admins.length) {
@@ -57,16 +57,16 @@ async function create(req, res) {
 async function update(req, res) {
   const {
     group_name, group_link, group_type, group_members, group_current_status,
-    owner_fb_id_name, owner_fb_id_link, backup_group_link, group_status, admins
+    owner_fb_id_name, owner_fb_id_link, backup_group_link, group_condition, admins
   } = req.body;
   const { id } = req.params;
 
   await pool.query(
     `UPDATE facebook_groups SET group_name=$1, group_link=$2, group_type=$3, group_members=$4,
-     group_current_status=$5, owner_fb_id_name=$6, owner_fb_id_link=$7, backup_group_link=$8, group_status=$9
+     group_current_status=$5, owner_fb_id_name=$6, owner_fb_id_link=$7, backup_group_link=$8, group_condition=$9
      WHERE id=$10`,
     [group_name, group_link, group_type, group_members || 0, group_current_status,
-     owner_fb_id_name, owner_fb_id_link, backup_group_link, group_status, id]
+     owner_fb_id_name, owner_fb_id_link, backup_group_link, group_condition, id]
   );
 
   if (Array.isArray(admins)) {
