@@ -82,8 +82,12 @@ async function initDB() {
     DO $$ BEGIN
       IF (SELECT data_type FROM information_schema.columns
           WHERE table_name='clients' AND column_name='sample_taken') = 'boolean' THEN
+        ALTER TABLE clients ALTER COLUMN sample_taken DROP DEFAULT;
+        ALTER TABLE clients ALTER COLUMN order_completed DROP DEFAULT;
         ALTER TABLE clients ALTER COLUMN sample_taken TYPE INT USING (sample_taken::int);
         ALTER TABLE clients ALTER COLUMN order_completed TYPE INT USING (order_completed::int);
+        ALTER TABLE clients ALTER COLUMN sample_taken SET DEFAULT 0;
+        ALTER TABLE clients ALTER COLUMN order_completed SET DEFAULT 0;
       END IF;
     END $$
   `);
