@@ -7,7 +7,12 @@ const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:3001', credentials: true }));
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  'http://localhost:3001',
+  'https://nebs-seller-portal.vercel.app',
+].filter(Boolean);
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/auth'));
