@@ -9,23 +9,69 @@ import toast from 'react-hot-toast';
 interface Client {
   id: string; client_name: string; whatsapp_number: string; whatsapp_link: string;
   data_requirements: string; type: string; quantity: number;
-  sample_taken: number; order_completed: number; badge: string;
+  sample_taken: number; order_completed: number;
+  client_type: string; data_type: string;
   last_message: string; last_message_image: string; remarks: string;
   added_by_name: string; created_at: string;
 }
 
-const BADGES = [
-  'New Client', 'Old Client', 'VIP', 'Hot Lead', 'Cold Lead', 'Pending', 'Blacklisted',
-  'WA Level 1', 'WA Level 2', 'WA Level 3', 'WA Level 4', 'WA Level 5',
+const CLIENT_TYPES = [
+  'New client', 'Sample provided', 'Important', 'Pending payment', 'Order completed',
+  'Follow up', 'Spammer', 'No response', 'Old client', 'Refund Requested',
+  'Replacement pending', 'Payment Issue', 'Problematic',
 ];
 
-const BADGE_COLORS: Record<string, string> = {
-  'WA Level 1': 'bg-green-500/20 text-green-300',
-  'WA Level 2': 'bg-green-500/20 text-green-300',
-  'WA Level 3': 'bg-blue-500/20 text-blue-300',
-  'WA Level 4': 'bg-violet-500/20 text-violet-300',
-  'WA Level 5': 'bg-amber-500/20 text-amber-300',
-};
+const DATA_TYPES = [
+  'Email data', 'Gmail domain', 'MIX Domain', 'PAID domain', 'Crypto data',
+  'Telemarketing data', 'Homeowner Data', 'SMS/WhatsApp data', 'Sweepstakes data',
+  'B2B Data', 'Car Owner Data',
+];
+
+function parseMulti(val: string | null | undefined): string[] {
+  if (!val) return [];
+  return val.split(',').map(s => s.trim()).filter(Boolean);
+}
+
+function MultiSelect({ label, options, value, onChange, accentClass }: {
+  label: string;
+  options: string[];
+  value: string;
+  onChange: (val: string) => void;
+  accentClass: string;
+}) {
+  const selected = parseMulti(value);
+  function toggle(opt: string) {
+    const next = selected.includes(opt)
+      ? selected.filter(s => s !== opt)
+      : [...selected, opt];
+    onChange(next.join(','));
+  }
+  return (
+    <div>
+      <label className="block text-xs text-slate-400 mb-2">{label}</label>
+      <div className="flex flex-wrap gap-1.5">
+        {options.map(opt => (
+          <button
+            type="button"
+            key={opt}
+            onClick={() => toggle(opt)}
+            className={cn(
+              'px-2.5 py-1 text-xs rounded-lg border transition-colors',
+              selected.includes(opt)
+                ? accentClass
+                : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200 hover:border-slate-600'
+            )}
+          >
+            {opt}
+          </button>
+        ))}
+      </div>
+      {selected.length > 0 && (
+        <p className="text-xs text-slate-500 mt-1.5">{selected.length} selected</p>
+      )}
+    </div>
+  );
+}
 
 function ImagePreview({ src, onClose }: { src: string; onClose: () => void }) {
   return (
@@ -46,7 +92,8 @@ function Modal({ onClose, client, onSaved }: { onClose: () => void; client?: Cli
     quantity: client?.quantity ?? 0,
     sample_taken: client?.sample_taken ?? 0,
     order_completed: client?.order_completed ?? 0,
-    badge: client?.badge || '',
+    client_type: client?.client_type || '',
+    data_type: client?.data_type || '',
     last_message: client?.last_message || '',
     last_message_image: client?.last_message_image || '',
     remarks: client?.remarks || '',
@@ -116,14 +163,21 @@ function Modal({ onClose, client, onSaved }: { onClose: () => void; client?: Cli
 
           {inp('Data Requirements', 'data_requirements')}
 
-          <div>
-            <label className="block text-xs text-slate-400 mb-1">Badge</label>
-            <select value={form.badge} onChange={e => setForm(f => ({ ...f, badge: e.target.value }))}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
-              <option value="">No Badge</option>
-              {BADGES.map(b => <option key={b} value={b}>{b}</option>)}
-            </select>
-          </div>
+          <MultiSelect
+            label="Client Type"
+            options={CLIENT_TYPES}
+            value={form.client_type}
+            onChange={val => setForm(f => ({ ...f, client_type: val }))}
+            accentClass="bg-violet-600/30 border-violet-500/60 text-violet-200"
+          />
+
+          <MultiSelect
+            label="Data Type"
+            options={DATA_TYPES}
+            value={form.data_type}
+            onChange={val => setForm(f => ({ ...f, data_type: val }))}
+            accentClass="bg-blue-600/30 border-blue-500/60 text-blue-200"
+          />
 
           <div>
             <label className="block text-xs text-slate-400 mb-1">Last Message</label>
@@ -163,6 +217,21 @@ function Modal({ onClose, client, onSaved }: { onClose: () => void; client?: Cli
           </div>
         </form>
       </div>
+    </div>
+  );
+}
+
+function ChipList({ value, colorClass, max = 2 }: { value: string; colorClass: string; max?: number }) {
+  const items = parseMulti(value);
+  if (!items.length) return <span className="text-slate-600 text-xs">—</span>;
+  const shown = items.slice(0, max);
+  const rest = items.length - max;
+  return (
+    <div className="flex flex-wrap gap-1">
+      {shown.map(t => (
+        <span key={t} className={cn('text-xs px-1.5 py-0.5 rounded', colorClass)}>{t}</span>
+      ))}
+      {rest > 0 && <span className="text-xs text-slate-500">+{rest}</span>}
     </div>
   );
 }
@@ -222,7 +291,7 @@ export default function ClientsPage() {
           <div className="flex justify-center py-16"><Loader2 size={24} className="animate-spin text-violet-400" /></div>
         ) : (
           <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm min-w-[960px]">
               <thead>
                 <tr className="border-b border-slate-800 text-slate-400 text-xs uppercase tracking-wider">
                   <th className="px-4 py-3 text-left">Client</th>
@@ -231,7 +300,8 @@ export default function ClientsPage() {
                   <th className="px-4 py-3 text-center">Qty</th>
                   <th className="px-4 py-3 text-center">Samples</th>
                   <th className="px-4 py-3 text-center">Orders</th>
-                  <th className="px-4 py-3 text-left">Badge</th>
+                  <th className="px-4 py-3 text-left">Client Type</th>
+                  <th className="px-4 py-3 text-left">Data Type</th>
                   <th className="px-4 py-3 text-left">Msg</th>
                   <th className="px-4 py-3 text-left">Added</th>
                   <th className="px-4 py-3" />
@@ -239,7 +309,7 @@ export default function ClientsPage() {
               </thead>
               <tbody className="divide-y divide-slate-800">
                 {filtered.length === 0 && (
-                  <tr><td colSpan={10} className="py-12 text-center text-slate-500">No clients found</td></tr>
+                  <tr><td colSpan={11} className="py-12 text-center text-slate-500">No clients found</td></tr>
                 )}
                 {filtered.map(c => (
                   <tr key={c.id} className="hover:bg-slate-800/50 transition-colors">
@@ -271,11 +341,10 @@ export default function ClientsPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      {c.badge && (
-                        <span className={cn('text-xs px-2 py-0.5 rounded-full', BADGE_COLORS[c.badge] || 'bg-amber-500/20 text-amber-300')}>
-                          {c.badge}
-                        </span>
-                      )}
+                      <ChipList value={c.client_type} colorClass="bg-violet-500/20 text-violet-300" max={2} />
+                    </td>
+                    <td className="px-4 py-3">
+                      <ChipList value={c.data_type} colorClass="bg-blue-500/20 text-blue-300" max={2} />
                     </td>
                     <td className="px-4 py-3">
                       {c.last_message_image && (

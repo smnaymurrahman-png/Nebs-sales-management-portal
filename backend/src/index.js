@@ -81,6 +81,8 @@ async function initDB() {
   // Migrate existing clients table to add new columns
   await pool.query(`ALTER TABLE clients ADD COLUMN IF NOT EXISTS whatsapp_link VARCHAR(500)`);
   await pool.query(`ALTER TABLE clients ADD COLUMN IF NOT EXISTS last_message_image TEXT`);
+  await pool.query(`ALTER TABLE clients ADD COLUMN IF NOT EXISTS client_type TEXT`);
+  await pool.query(`ALTER TABLE clients ADD COLUMN IF NOT EXISTS data_type TEXT`);
   await pool.query(`
     DO $$ BEGIN
       IF (SELECT data_type FROM information_schema.columns
