@@ -26,6 +26,7 @@ app.use('/api/instructions', require('./routes/instructions'));
 app.use('/api/tutorials', require('./routes/tutorials'));
 app.use('/api/chat', require('./routes/chat'));
 app.use('/api/whatsapp-ids', require('./routes/whatsappIds'));
+app.use('/api/facebook-page-ids', require('./routes/facebookPageIds'));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -162,6 +163,23 @@ async function initDB() {
       wa_status VARCHAR(20) DEFAULT 'New' CHECK (wa_status IN ('New','Active','Disabled','Banned')),
       connected_fb_id VARCHAR(255),
       device VARCHAR(255),
+      remarks TEXT,
+      added_by VARCHAR(36) REFERENCES users(id) ON DELETE SET NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS facebook_page_ids (
+      id VARCHAR(36) PRIMARY KEY,
+      page_name VARCHAR(255) NOT NULL,
+      page_link VARCHAR(1000),
+      page_id VARCHAR(255),
+      fb_email VARCHAR(255),
+      fb_password VARCHAR(255),
+      page_status VARCHAR(20) DEFAULT 'New' CHECK (page_status IN ('New','Active','Disabled','Restricted')),
+      connected_whatsapp VARCHAR(50),
+      page_likes INT DEFAULT 0,
       remarks TEXT,
       added_by VARCHAR(36) REFERENCES users(id) ON DELETE SET NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
