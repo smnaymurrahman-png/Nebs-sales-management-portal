@@ -40,10 +40,12 @@ async function initDB() {
       password VARCHAR(255) NOT NULL,
       designation VARCHAR(255),
       role VARCHAR(20) DEFAULT 'user' CHECK (role IN ('super_admin','admin','user')),
+      shift VARCHAR(20) DEFAULT 'Morning' CHECK (shift IN ('Morning','Evening','Day')),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS shift VARCHAR(20) DEFAULT 'Morning'`);
   await pool.query(`
     CREATE TABLE IF NOT EXISTS daily_tasks (
       id VARCHAR(36) PRIMARY KEY,

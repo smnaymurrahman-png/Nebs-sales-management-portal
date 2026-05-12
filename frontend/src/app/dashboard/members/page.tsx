@@ -8,16 +8,22 @@ import { useAuthStore } from '@/lib/store';
 import { cn, ROLE_COLORS, ROLE_LABELS, formatDate } from '@/lib/utils';
 import toast from 'react-hot-toast';
 
-interface Member { id: string; full_name: string; work_email: string; designation: string; role: string; created_at: string }
+const SHIFT_COLORS: Record<string, string> = {
+  Morning: 'bg-amber-500/20 text-amber-300',
+  Evening: 'bg-blue-500/20 text-blue-300',
+  Day: 'bg-emerald-500/20 text-emerald-300',
+};
+
+interface Member { id: string; full_name: string; work_email: string; designation: string; role: string; shift: string; created_at: string }
 
 function MemberModal({ onClose, member, onSaved, currentUserRole }: { onClose: () => void; member?: Member | null; onSaved: () => void; currentUserRole: string }) {
-  const [form, setForm] = useState({ full_name: member?.full_name || '', work_email: member?.work_email || '', password: '', designation: member?.designation || '', role: member?.role || 'user' });
+  const [form, setForm] = useState({ full_name: member?.full_name || '', work_email: member?.work_email || '', password: '', designation: member?.designation || '', role: member?.role || 'user', shift: member?.shift || 'Morning' });
   const [loading, setLoading] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault(); setLoading(true);
     try {
-      if (member) await api.put(`/users/${member.id}`, { full_name: form.full_name, work_email: form.work_email, designation: form.designation, role: form.role });
+      if (member) await api.put(`/users/${member.id}`, { full_name: form.full_name, work_email: form.work_email, designation: form.designation, role: form.role, shift: form.shift });
       else await api.post('/users', form);
       toast.success(member ? 'Updated' : 'Member added'); onSaved(); onClose();
     } catch (err: any) { toast.error(err.response?.data?.error || 'Error'); }
@@ -50,12 +56,23 @@ function MemberModal({ onClose, member, onSaved, currentUserRole }: { onClose: (
                 className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
             </div>
           )}
-          <div>
-            <label className="block text-xs text-slate-400 mb-1">Role</label>
-            <select value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
-              {roleOptions.map(([val, label]) => <option key={val} value={val}>{label}</option>)}
-            </select>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Role</label>
+              <select value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))}
+                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+                {roleOptions.map(([val, label]) => <option key={val} value={val}>{label}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Shift</label>
+              <select value={form.shift} onChange={e => setForm(f => ({ ...f, shift: e.target.value }))}
+                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+                <option value="Morning">Morning</option>
+                <option value="Evening">Evening</option>
+                <option value="Day">Day</option>
+              </select>
+            </div>
           </div>
           <div className="flex justify-end gap-3 pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-slate-400 hover:text-white bg-slate-800 rounded-xl">Cancel</button>
@@ -161,12 +178,13 @@ export default function MembersPage() {
                   <th className="px-4 py-3 text-left">Email</th>
                   <th className="px-4 py-3 text-left">Designation</th>
                   <th className="px-4 py-3 text-left">Role</th>
+                  <th className="px-4 py-3 text-left">Shift</th>
                   <th className="px-4 py-3 text-left">Joined</th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800">
-                {filtered.length === 0 && <tr><td colSpan={6} className="py-12 text-center text-slate-500">No members found</td></tr>}
+                {filtered.length === 0 && <tr><td colSpan={7} className="py-12 text-center text-slate-500">No members found</td></tr>}
                 {filtered.map(m => (
                   <tr key={m.id} className="hover:bg-slate-800/50 transition-colors">
                     <td className="px-4 py-3 font-medium text-white">{m.full_name}</td>
@@ -174,6 +192,9 @@ export default function MembersPage() {
                     <td className="px-4 py-3 text-slate-400">{m.designation || '—'}</td>
                     <td className="px-4 py-3">
                       <span className={cn('text-xs px-2.5 py-1 rounded-full font-medium', ROLE_COLORS[m.role])}>{ROLE_LABELS[m.role]}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={cn('text-xs px-2.5 py-1 rounded-full font-medium', SHIFT_COLORS[m.shift] || 'bg-slate-700 text-slate-400')}>{m.shift || 'Morning'}</span>
                     </td>
                     <td className="px-4 py-3 text-slate-500 text-xs">{formatDate(m.created_at)}</td>
                     <td className="px-4 py-3">

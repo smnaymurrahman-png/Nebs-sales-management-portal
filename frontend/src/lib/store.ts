@@ -7,6 +7,7 @@ interface User {
   work_email: string;
   designation?: string;
   role: 'super_admin' | 'admin' | 'user';
+  shift?: 'Morning' | 'Evening' | 'Day';
 }
 
 interface AuthState {

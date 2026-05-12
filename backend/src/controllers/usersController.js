@@ -4,13 +4,13 @@ const pool = require('../config/database');
 
 async function getAll(req, res) {
   const { rows } = await pool.query(
-    'SELECT id, full_name, work_email, designation, role, created_at FROM users ORDER BY created_at DESC'
+    'SELECT id, full_name, work_email, designation, role, shift, created_at FROM users ORDER BY created_at DESC'
   );
   res.json(rows);
 }
 
 async function create(req, res) {
-  const { full_name, work_email, password, designation, role } = req.body;
+  const { full_name, work_email, password, designation, role, shift } = req.body;
   if (!full_name || !work_email || !password) return res.status(400).json({ error: 'Required fields missing' });
 
   if (req.user.role === 'admin' && role !== 'user') {
@@ -22,23 +22,23 @@ async function create(req, res) {
 
   const hash = await bcrypt.hash(password, 10);
   const { rows } = await pool.query(
-    'INSERT INTO users (id, full_name, work_email, password, designation, role) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, full_name, work_email, designation, role',
-    [uuidv4(), full_name, work_email, hash, designation || null, role || 'user']
+    'INSERT INTO users (id, full_name, work_email, password, designation, role, shift) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, full_name, work_email, designation, role, shift',
+    [uuidv4(), full_name, work_email, hash, designation || null, role || 'user', shift || 'Morning']
   );
   res.status(201).json(rows[0]);
 }
 
 async function update(req, res) {
   const { id } = req.params;
-  const { full_name, work_email, designation, role } = req.body;
+  const { full_name, work_email, designation, role, shift } = req.body;
 
   if (req.user.role === 'admin' && role && role !== 'user') {
     return res.status(403).json({ error: 'Admins cannot change roles to admin/super_admin' });
   }
 
   const { rows } = await pool.query(
-    'UPDATE users SET full_name = $1, work_email = $2, designation = $3, role = $4 WHERE id = $5 RETURNING id, full_name, work_email, designation, role',
-    [full_name, work_email, designation, role, id]
+    'UPDATE users SET full_name = $1, work_email = $2, designation = $3, role = $4, shift = $5 WHERE id = $6 RETURNING id, full_name, work_email, designation, role, shift',
+    [full_name, work_email, designation, role, shift || 'Morning', id]
   );
   res.json(rows[0]);
 }

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Zap, LayoutDashboard, ClipboardList, Users, Facebook,
-  MessageCircle, BookOpen, Bot, Video, FileText, UserCog, Settings, LogOut,
+  MessageCircle, BookOpen, Bot, Video, UserCog, Settings, LogOut, CalendarClock,
 } from 'lucide-react';
 import { useAuthStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 const NAV = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/dashboard/daily-task', label: 'Daily Task', icon: ClipboardList },
+  { href: '/dashboard/shift-tasks', label: 'Shift Tasks', icon: CalendarClock },
   { href: '/dashboard/clients', label: 'Clients', icon: Users },
   { href: '/dashboard/facebook-groups', label: 'Facebook Groups', icon: Facebook },
   { href: '/dashboard/facebook-ids', label: 'Facebook IDs', icon: UserCog },
