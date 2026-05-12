@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Zap, LayoutDashboard, ClipboardList, Users, Facebook,
-  MessageCircle, BookOpen, Bot, Video, UserCog, Settings, LogOut, CalendarClock,
+  MessageCircle, BookOpen, Bot, Video, UserCog, Settings, LogOut, CalendarClock, Smartphone,
 } from 'lucide-react';
 import { useAuthStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
@@ -16,6 +16,7 @@ const NAV = [
   { href: '/dashboard/facebook-groups', label: 'Facebook Groups', icon: Facebook },
   { href: '/dashboard/facebook-ids', label: 'Facebook IDs', icon: UserCog },
   { href: '/dashboard/whatsapp-groups', label: 'WhatsApp Groups', icon: MessageCircle },
+  { href: '/dashboard/whatsapp-ids', label: 'WhatsApp IDs', icon: Smartphone },
   { href: '/dashboard/instructions', label: 'Instructions', icon: BookOpen },
   { href: '/dashboard/nebs-seller-pro', label: 'Nebs-Seller Pro', icon: Bot },
   { href: '/dashboard/tutorials', label: 'Tutorials', icon: Video },

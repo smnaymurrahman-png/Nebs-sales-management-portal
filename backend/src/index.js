@@ -25,6 +25,7 @@ app.use('/api/whatsapp-groups', require('./routes/whatsappGroups'));
 app.use('/api/instructions', require('./routes/instructions'));
 app.use('/api/tutorials', require('./routes/tutorials'));
 app.use('/api/chat', require('./routes/chat'));
+app.use('/api/whatsapp-ids', require('./routes/whatsappIds'));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -143,6 +144,23 @@ async function initDB() {
       group_members INT DEFAULT 0,
       group_type VARCHAR(100),
       activity_status VARCHAR(100),
+      added_by VARCHAR(36) REFERENCES users(id) ON DELETE SET NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS whatsapp_ids (
+      id VARCHAR(36) PRIMARY KEY,
+      whatsapp_name VARCHAR(255) NOT NULL,
+      whatsapp_number VARCHAR(50),
+      whatsapp_link VARCHAR(500),
+      wa_email VARCHAR(255),
+      wa_password VARCHAR(255),
+      wa_status VARCHAR(20) DEFAULT 'New' CHECK (wa_status IN ('New','Active','Disabled','Banned')),
+      connected_fb_id VARCHAR(255),
+      device VARCHAR(255),
+      remarks TEXT,
       added_by VARCHAR(36) REFERENCES users(id) ON DELETE SET NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
