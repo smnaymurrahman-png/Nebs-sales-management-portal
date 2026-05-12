@@ -60,18 +60,32 @@ async function initDB() {
       id VARCHAR(36) PRIMARY KEY,
       client_name VARCHAR(255) NOT NULL,
       whatsapp_number VARCHAR(50),
+      whatsapp_link VARCHAR(500),
       data_requirements TEXT,
       type VARCHAR(20) NOT NULL CHECK (type IN ('Blaster','Reseller','Owner')),
       quantity INT DEFAULT 0,
-      sample_taken BOOLEAN DEFAULT FALSE,
-      order_completed BOOLEAN DEFAULT FALSE,
+      sample_taken INT DEFAULT 0,
+      order_completed INT DEFAULT 0,
       badge VARCHAR(100),
       last_message TEXT,
+      last_message_image TEXT,
       remarks TEXT,
       added_by VARCHAR(36) REFERENCES users(id) ON DELETE SET NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
+  `);
+  // Migrate existing clients table to add new columns
+  await pool.query(`ALTER TABLE clients ADD COLUMN IF NOT EXISTS whatsapp_link VARCHAR(500)`);
+  await pool.query(`ALTER TABLE clients ADD COLUMN IF NOT EXISTS last_message_image TEXT`);
+  await pool.query(`
+    DO $$ BEGIN
+      IF (SELECT data_type FROM information_schema.columns
+          WHERE table_name='clients' AND column_name='sample_taken') = 'boolean' THEN
+        ALTER TABLE clients ALTER COLUMN sample_taken TYPE INT USING (sample_taken::int);
+        ALTER TABLE clients ALTER COLUMN order_completed TYPE INT USING (order_completed::int);
+      END IF;
+    END $$
   `);
   await pool.query(`
     CREATE TABLE IF NOT EXISTS facebook_groups (

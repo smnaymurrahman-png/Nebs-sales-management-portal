@@ -21,29 +21,31 @@ async function getById(req, res) {
 }
 
 async function create(req, res) {
-  const { client_name, whatsapp_number, data_requirements, type, quantity } = req.body;
+  const { client_name, whatsapp_number, whatsapp_link, data_requirements, type, quantity } = req.body;
   if (!client_name || !type) return res.status(400).json({ error: 'client_name and type required' });
 
   const { rows } = await pool.query(
-    `INSERT INTO clients (id, client_name, whatsapp_number, data_requirements, type, quantity, added_by)
-     VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-    [uuidv4(), client_name, whatsapp_number || null, data_requirements || null, type, quantity || 0, req.user.id]
+    `INSERT INTO clients (id, client_name, whatsapp_number, whatsapp_link, data_requirements, type, quantity, added_by)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+    [uuidv4(), client_name, whatsapp_number || null, whatsapp_link || null, data_requirements || null, type, quantity || 0, req.user.id]
   );
   res.status(201).json(rows[0]);
 }
 
 async function update(req, res) {
   const {
-    client_name, whatsapp_number, data_requirements, type, quantity,
-    sample_taken, order_completed, badge, last_message, remarks
+    client_name, whatsapp_number, whatsapp_link, data_requirements, type, quantity,
+    sample_taken, order_completed, badge, last_message, last_message_image, remarks
   } = req.body;
 
   const { rows } = await pool.query(
-    `UPDATE clients SET client_name=$1, whatsapp_number=$2, data_requirements=$3, type=$4, quantity=$5,
-     sample_taken=$6, order_completed=$7, badge=$8, last_message=$9, remarks=$10
-     WHERE id=$11 RETURNING *`,
-    [client_name, whatsapp_number, data_requirements, type, quantity,
-     !!sample_taken, !!order_completed, badge, last_message, remarks, req.params.id]
+    `UPDATE clients SET client_name=$1, whatsapp_number=$2, whatsapp_link=$3, data_requirements=$4,
+     type=$5, quantity=$6, sample_taken=$7, order_completed=$8, badge=$9,
+     last_message=$10, last_message_image=$11, remarks=$12
+     WHERE id=$13 RETURNING *`,
+    [client_name, whatsapp_number, whatsapp_link, data_requirements, type,
+     quantity || 0, parseInt(sample_taken) || 0, parseInt(order_completed) || 0,
+     badge, last_message, last_message_image || null, remarks, req.params.id]
   );
   res.json(rows[0]);
 }
