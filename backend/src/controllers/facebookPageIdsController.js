@@ -2,15 +2,10 @@ const { v4: uuidv4 } = require('uuid');
 const pool = require('../config/database');
 
 async function getAll(req, res) {
-  const isAdmin = req.user.role !== 'user';
-  let query = `SELECT fp.*, u.full_name as added_by_name FROM facebook_page_ids fp LEFT JOIN users u ON fp.added_by = u.id`;
-  const params = [];
-  if (!isAdmin) {
-    query += ` WHERE fp.added_by = $1`;
-    params.push(req.user.id);
-  }
-  query += ` ORDER BY fp.created_at DESC`;
-  const { rows } = await pool.query(query, params);
+  const { rows } = await pool.query(
+    `SELECT fp.*, u.full_name as added_by_name FROM facebook_page_ids fp LEFT JOIN users u ON fp.added_by = u.id WHERE fp.added_by = $1 ORDER BY fp.created_at DESC`,
+    [req.user.id]
+  );
   res.json(rows);
 }
 
@@ -28,11 +23,8 @@ async function create(req, res) {
 
 async function update(req, res) {
   const { page_name, page_link, page_id, fb_email, fb_password, page_status, connected_whatsapp, page_likes, remarks } = req.body;
-  const isAdmin = req.user.role !== 'user';
-  if (!isAdmin) {
-    const { rows: check } = await pool.query('SELECT added_by FROM facebook_page_ids WHERE id = $1', [req.params.id]);
-    if (!check.length || check[0].added_by !== req.user.id) return res.status(403).json({ error: 'Forbidden' });
-  }
+  const { rows: check } = await pool.query('SELECT added_by FROM facebook_page_ids WHERE id = $1', [req.params.id]);
+  if (!check.length || check[0].added_by !== req.user.id) return res.status(403).json({ error: 'Forbidden' });
   const { rows } = await pool.query(
     `UPDATE facebook_page_ids SET page_name=$1, page_link=$2, page_id=$3, fb_email=$4,
      fb_password=$5, page_status=$6, connected_whatsapp=$7, page_likes=$8, remarks=$9
@@ -44,11 +36,8 @@ async function update(req, res) {
 }
 
 async function remove(req, res) {
-  const isAdmin = req.user.role !== 'user';
-  if (!isAdmin) {
-    const { rows } = await pool.query('SELECT added_by FROM facebook_page_ids WHERE id = $1', [req.params.id]);
-    if (!rows.length || rows[0].added_by !== req.user.id) return res.status(403).json({ error: 'Forbidden' });
-  }
+  const { rows } = await pool.query('SELECT added_by FROM facebook_page_ids WHERE id = $1', [req.params.id]);
+  if (!rows.length || rows[0].added_by !== req.user.id) return res.status(403).json({ error: 'Forbidden' });
   await pool.query('DELETE FROM facebook_page_ids WHERE id = $1', [req.params.id]);
   res.json({ message: 'Deleted' });
 }
