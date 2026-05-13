@@ -131,9 +131,9 @@ export default function ShiftTasksPage() {
   ];
 
   const colorMap: Record<string, string> = {
-    amber: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
-    blue: 'bg-blue-500/20 text-blue-300 border-blue-500/40',
-    emerald: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+    amber: 'bg-amber-50 text-amber-700 border-amber-200',
+    blue: 'bg-blue-50 text-blue-700 border-blue-200',
+    emerald: 'bg-emerald-50 text-emerald-700 border-emerald-200',
   };
   const activeTab = tabs.find(t => t.key === active)!;
 
@@ -209,9 +209,9 @@ export default function ShiftTasksPage() {
             <div>
               <p className="text-xs text-gray-500 mb-2 font-medium">Story Types</p>
               <BulletList items={STORY_TYPES} />
-              <div className="mt-3 flex items-start gap-2 p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl">
-                <span className="text-amber-400 text-xs font-bold flex-shrink-0">⚠</span>
-                <p className="text-xs text-amber-300">Story must be posted right at shift start — before sending any greeting messages.</p>
+              <div className="mt-3 flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+                <span className="text-amber-600 text-xs font-bold flex-shrink-0">⚠</span>
+                <p className="text-xs text-amber-700">Story must be posted right at shift start — before sending any greeting messages.</p>
               </div>
             </div>
           </div>

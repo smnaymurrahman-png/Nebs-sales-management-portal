@@ -28,6 +28,9 @@ app.use('/api/chat', require('./routes/chat'));
 app.use('/api/whatsapp-ids', require('./routes/whatsappIds'));
 app.use('/api/facebook-page-ids', require('./routes/facebookPageIds'));
 app.use('/api/vendors', require('./routes/vendors'));
+app.use('/api/linkedin-profiles', require('./routes/linkedinProfiles'));
+app.use('/api/linkedin-groups', require('./routes/linkedinGroups'));
+app.use('/api/member-profiles', require('./routes/memberProfiles'));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -231,6 +234,35 @@ async function initDB() {
       video_url VARCHAR(1000) NOT NULL,
       category VARCHAR(100),
       created_by VARCHAR(36) REFERENCES users(id) ON DELETE SET NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS linkedin_profiles (
+      id VARCHAR(36) PRIMARY KEY,
+      profile_name VARCHAR(255) NOT NULL,
+      profile_link VARCHAR(1000),
+      li_email VARCHAR(255),
+      li_password VARCHAR(255),
+      connection_count INT DEFAULT 0,
+      li_status VARCHAR(20) DEFAULT 'Active',
+      remarks TEXT,
+      added_by VARCHAR(36) REFERENCES users(id) ON DELETE CASCADE,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS linkedin_groups (
+      id VARCHAR(36) PRIMARY KEY,
+      group_name VARCHAR(255) NOT NULL,
+      group_link VARCHAR(1000),
+      group_type VARCHAR(100),
+      group_members INT DEFAULT 0,
+      group_condition VARCHAR(100),
+      added_by VARCHAR(36) REFERENCES users(id) ON DELETE SET NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )

@@ -52,7 +52,7 @@ function Modal({ onClose, group, onSaved }: { onClose: () => void; group?: WAGro
             ))}
             <div>
               <label className="block text-xs text-gray-500 mb-1">Group Members</label>
-              <input type="number" value={form.group_members} onChange={e => setForm(f => ({ ...f, group_members: Number(e.target.value) }))}
+              <input type="number" value={form.group_members === 0 ? '' : form.group_members} onChange={e => setForm(f => ({ ...f, group_members: parseInt(e.target.value) || 0 }))}
                 className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
             </div>
           </div>
@@ -126,7 +126,7 @@ export default function WhatsAppGroupsPage() {
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-gray-900">{g.group_name}</span>
                         {g.group_link && (
-                          <a href={g.group_link} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300"><ExternalLink size={12} /></a>
+                          <a href={g.group_link} target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:text-emerald-700"><ExternalLink size={12} /></a>
                         )}
                       </div>
                     </td>
@@ -136,8 +136,8 @@ export default function WhatsAppGroupsPage() {
                     <td className="px-4 py-3">
                       {g.activity_status && (
                         <span className={cn('text-xs px-2 py-0.5 rounded-full',
-                          g.activity_status === 'Active' ? 'bg-emerald-500/20 text-emerald-300' :
-                          g.activity_status === 'Inactive' ? 'bg-red-500/20 text-red-300' : 'bg-gray-200 text-gray-600'
+                          g.activity_status === 'Active' ? 'bg-emerald-50 text-emerald-700' :
+                          g.activity_status === 'Inactive' ? 'bg-red-50 text-red-600' : 'bg-gray-100 text-gray-600'
                         )}>{g.activity_status}</span>
                       )}
                     </td>

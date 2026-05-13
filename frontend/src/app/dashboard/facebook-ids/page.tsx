@@ -74,7 +74,7 @@ function Modal({ onClose, item, onSaved }: { onClose: () => void; item?: FBId | 
             </div>
             <div>
               <label className="block text-xs text-gray-500 mb-1">Friends Count</label>
-              <input type="number" value={form.friends_count} onChange={e => setForm(f => ({ ...f, friends_count: Number(e.target.value) }))}
+              <input type="number" value={form.friends_count === 0 ? '' : form.friends_count} onChange={e => setForm(f => ({ ...f, friends_count: parseInt(e.target.value) || 0 }))}
                 className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
             </div>
           </div>
@@ -159,7 +159,7 @@ export default function FacebookIdsPage() {
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-gray-900">{item.facebook_name}</span>
                         {item.facebook_id_link && (
-                          <a href={item.facebook_id_link} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300"><ExternalLink size={12} /></a>
+                          <a href={item.facebook_id_link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700"><ExternalLink size={12} /></a>
                         )}
                       </div>
                     </td>

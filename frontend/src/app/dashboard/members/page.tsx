@@ -9,9 +9,9 @@ import { cn, ROLE_COLORS, ROLE_LABELS, formatDate } from '@/lib/utils';
 import toast from 'react-hot-toast';
 
 const SHIFT_COLORS: Record<string, string> = {
-  Morning: 'bg-amber-500/20 text-amber-300',
-  Evening: 'bg-blue-500/20 text-blue-300',
-  Day: 'bg-emerald-500/20 text-emerald-300',
+  Morning: 'bg-amber-50 text-amber-700',
+  Evening: 'bg-blue-50 text-blue-700',
+  Day: 'bg-emerald-50 text-emerald-700',
 };
 
 interface Member { id: string; full_name: string; work_email: string; designation: string; role: string; shift: string; created_at: string }
@@ -115,7 +115,7 @@ function ResetPwdModal({ onClose, member }: { onClose: () => void; member: Membe
           </div>
           <div className="flex justify-end gap-3">
             <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-900 bg-gray-100 rounded-xl">Cancel</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-amber-600 hover:bg-amber-700 text-gray-900 rounded-xl flex items-center gap-2 disabled:opacity-60">
+            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-amber-600 hover:bg-amber-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
               {loading && <Loader2 size={14} className="animate-spin" />} Reset
             </button>
           </div>

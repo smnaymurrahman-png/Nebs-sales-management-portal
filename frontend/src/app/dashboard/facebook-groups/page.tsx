@@ -69,7 +69,7 @@ function Modal({ onClose, group, onSaved }: { onClose: () => void; group?: FBGro
             </div>
             <div>
               <label className="block text-xs text-gray-500 mb-1">Group Members</label>
-              <input type="number" value={form.group_members}
+              <input type="number" value={form.group_members === 0 ? '' : form.group_members}
                 onChange={e => setField('group_members', parseInt(e.target.value) || 0)}
                 className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
             </div>
@@ -184,7 +184,7 @@ export default function FacebookGroupsPage() {
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-gray-900">{g.group_name}</span>
                         {g.group_link && (
-                          <a href={g.group_link} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
+                          <a href={g.group_link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700">
                             <ExternalLink size={12} />
                           </a>
                         )}
@@ -201,18 +201,18 @@ export default function FacebookGroupsPage() {
                       <div className="space-y-0.5">
                         {g.group_current_status && <p className="text-xs text-gray-600">{g.group_current_status}</p>}
                         {g.group_condition && <span className={cn('text-xs px-1.5 py-0.5 rounded',
-                          g.group_condition === 'Very Good' ? 'bg-emerald-500/20 text-emerald-300' :
-                          g.group_condition === 'Good' ? 'bg-green-500/20 text-green-300' :
-                          g.group_condition === 'Average' ? 'bg-yellow-500/20 text-yellow-300' :
-                          g.group_condition === 'Below Average' ? 'bg-orange-500/20 text-orange-300' :
-                          'bg-red-500/20 text-red-300')}>{g.group_condition}</span>}
+                          g.group_condition === 'Very Good' ? 'bg-emerald-50 text-emerald-700' :
+                          g.group_condition === 'Good' ? 'bg-green-50 text-green-700' :
+                          g.group_condition === 'Average' ? 'bg-yellow-50 text-yellow-700' :
+                          g.group_condition === 'Below Average' ? 'bg-orange-50 text-orange-700' :
+                          'bg-red-50 text-red-600')}>{g.group_condition}</span>}
                       </div>
                     </td>
                     <td className="px-4 py-3">
                       {g.owner_fb_id_name && (
                         <div className="flex items-center gap-1">
                           <span className="text-gray-600 text-xs">{g.owner_fb_id_name}</span>
-                          {g.owner_fb_id_link && <a href={g.owner_fb_id_link} target="_blank" rel="noopener noreferrer" className="text-blue-400"><ExternalLink size={10} /></a>}
+                          {g.owner_fb_id_link && <a href={g.owner_fb_id_link} target="_blank" rel="noopener noreferrer" className="text-blue-600"><ExternalLink size={10} /></a>}
                         </div>
                       )}
                     </td>

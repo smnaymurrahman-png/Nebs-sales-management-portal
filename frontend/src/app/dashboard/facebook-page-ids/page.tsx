@@ -7,10 +7,10 @@ import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
 
 const PAGE_STATUS_COLORS: Record<string, string> = {
-  New: 'bg-gray-200 text-gray-600',
-  Active: 'bg-emerald-500/20 text-emerald-300',
-  Disabled: 'bg-orange-500/20 text-orange-300',
-  Restricted: 'bg-red-500/20 text-red-400',
+  New: 'bg-gray-100 text-gray-600',
+  Active: 'bg-emerald-50 text-emerald-700',
+  Disabled: 'bg-orange-50 text-orange-700',
+  Restricted: 'bg-red-50 text-red-600',
 };
 
 interface FBPageId {
@@ -94,7 +94,7 @@ function Modal({ onClose, item, onSaved }: { onClose: () => void; item?: FBPageI
             </div>
             <div>
               <label className="block text-xs text-gray-500 mb-1">Page Likes</label>
-              <input type="number" min={0} value={form.page_likes} onChange={e => f('page_likes', parseInt(e.target.value) || 0)}
+              <input type="number" min={0} value={form.page_likes === 0 ? '' : form.page_likes} onChange={e => f('page_likes', parseInt(e.target.value) || 0)}
                 className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
             </div>
           </div>
@@ -199,7 +199,7 @@ export default function FacebookPageIdsPage() {
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-gray-900">{item.page_name}</span>
                         {item.page_link && (
-                          <a href={item.page_link} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
+                          <a href={item.page_link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700">
                             <ExternalLink size={12} />
                           </a>
                         )}

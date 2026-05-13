@@ -7,10 +7,10 @@ import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
 
 const WA_STATUS_COLORS: Record<string, string> = {
-  New: 'bg-gray-200 text-gray-600',
-  Active: 'bg-emerald-500/20 text-emerald-300',
-  Disabled: 'bg-orange-500/20 text-orange-300',
-  Banned: 'bg-red-500/20 text-red-400',
+  New: 'bg-gray-100 text-gray-600',
+  Active: 'bg-emerald-50 text-emerald-700',
+  Disabled: 'bg-orange-50 text-orange-700',
+  Banned: 'bg-red-50 text-red-600',
 };
 
 interface WAId {
@@ -199,7 +199,7 @@ export default function WhatsAppIdsPage() {
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-gray-900">{item.whatsapp_name}</span>
                         {item.whatsapp_link && (
-                          <a href={item.whatsapp_link} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300">
+                          <a href={item.whatsapp_link} target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:text-emerald-700">
                             <ExternalLink size={12} />
                           </a>
                         )}

@@ -126,7 +126,9 @@ function Modal({ onClose, client, onSaved }: { onClose: () => void; client?: Cli
   const inp = (label: string, key: keyof typeof form, type = 'text', placeholder = '') => (
     <div>
       <label className="block text-xs text-gray-500 mb-1">{label}</label>
-      <input type={type} value={form[key] as string | number} placeholder={placeholder}
+      <input type={type}
+        value={type === 'number' && form[key] === 0 ? '' : form[key] as string | number}
+        placeholder={placeholder}
         min={type === 'number' ? 0 : undefined}
         onChange={e => setForm(f => ({ ...f, [key]: type === 'number' ? (parseInt(e.target.value) || 0) : e.target.value }))}
         className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
@@ -176,7 +178,7 @@ function Modal({ onClose, client, onSaved }: { onClose: () => void; client?: Cli
             options={DATA_TYPES}
             value={form.data_type}
             onChange={val => setForm(f => ({ ...f, data_type: val }))}
-            accentClass="bg-blue-600/30 border-blue-500/60 text-blue-200"
+            accentClass="bg-blue-100 border-blue-400 text-blue-700"
           />
 
           <div>
@@ -321,7 +323,7 @@ export default function ClientsPage() {
                       <p className="text-gray-600 text-xs">{c.whatsapp_number || '—'}</p>
                       {c.whatsapp_link && (
                         <a href={c.whatsapp_link} target="_blank" rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-300 mt-0.5">
+                          className="flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700 mt-0.5">
                           <ExternalLink size={11} /> Open Chat
                         </a>
                       )}
@@ -331,12 +333,12 @@ export default function ClientsPage() {
                     </td>
                     <td className="px-4 py-3 text-center text-gray-600">{c.quantity}</td>
                     <td className="px-4 py-3 text-center">
-                      <span className={cn('text-xs font-medium', (c.sample_taken ?? 0) > 0 ? 'text-emerald-400' : 'text-gray-400')}>
+                      <span className={cn('text-xs font-medium', (c.sample_taken ?? 0) > 0 ? 'text-emerald-600' : 'text-gray-400')}>
                         {c.sample_taken ?? 0}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <span className={cn('text-xs font-medium', (c.order_completed ?? 0) > 0 ? 'text-blue-400' : 'text-gray-400')}>
+                      <span className={cn('text-xs font-medium', (c.order_completed ?? 0) > 0 ? 'text-blue-600' : 'text-gray-400')}>
                         {c.order_completed ?? 0}
                       </span>
                     </td>
@@ -344,7 +346,7 @@ export default function ClientsPage() {
                       <ChipList value={c.client_type} colorClass="bg-green-500/15 text-green-700" max={2} />
                     </td>
                     <td className="px-4 py-3">
-                      <ChipList value={c.data_type} colorClass="bg-blue-500/20 text-blue-300" max={2} />
+                      <ChipList value={c.data_type} colorClass="bg-blue-50 text-blue-700" max={2} />
                     </td>
                     <td className="px-4 py-3">
                       {c.last_message_image && (

@@ -13,16 +13,16 @@ const VENDOR_TYPES = [
 ];
 
 const VENDOR_TYPE_COLORS: Record<string, string> = {
-  'Blaster': 'bg-orange-500/20 text-orange-300',
-  'RDP seller': 'bg-purple-500/20 text-purple-300',
-  'API seller': 'bg-blue-500/20 text-blue-300',
-  'Software seller': 'bg-cyan-500/20 text-cyan-300',
-  'Calls Seller': 'bg-green-500/20 text-green-300',
-  'VOIP provider': 'bg-teal-500/20 text-teal-300',
-  'CC route provider': 'bg-indigo-500/20 text-indigo-300',
-  'Dialer provider': 'bg-green-500/15 text-green-700',
-  'Call center': 'bg-pink-500/20 text-pink-300',
-  'Campaign provider': 'bg-amber-500/20 text-amber-300',
+  'Blaster': 'bg-orange-50 text-orange-700',
+  'RDP seller': 'bg-purple-50 text-purple-700',
+  'API seller': 'bg-blue-50 text-blue-700',
+  'Software seller': 'bg-cyan-50 text-cyan-700',
+  'Calls Seller': 'bg-green-50 text-green-700',
+  'VOIP provider': 'bg-teal-50 text-teal-700',
+  'CC route provider': 'bg-indigo-50 text-indigo-700',
+  'Dialer provider': 'bg-green-50 text-green-700',
+  'Call center': 'bg-pink-50 text-pink-700',
+  'Campaign provider': 'bg-amber-50 text-amber-700',
 };
 
 interface Vendor {
@@ -36,9 +36,9 @@ interface Rating {
 }
 
 function ratingColor(r: number) {
-  if (r >= 8) return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
-  if (r >= 5) return 'bg-amber-500/20 text-amber-300 border-amber-500/30';
-  return 'bg-red-500/20 text-red-400 border-red-500/30';
+  if (r >= 8) return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+  if (r >= 5) return 'bg-amber-50 text-amber-700 border-amber-200';
+  return 'bg-red-50 text-red-600 border-red-200';
 }
 
 function StarDisplay({ value, max = 10 }: { value: number; max?: number }) {
@@ -92,7 +92,7 @@ function RatingsModal({ vendor, onClose, onRated }: { vendor: Vendor; onClose: (
             <h2 className="font-semibold text-gray-900">{vendor.name}</h2>
             <p className="text-xs text-gray-500 mt-0.5">
               {ratings.length} rating{ratings.length !== 1 ? 's' : ''}
-              {vendor.avg_rating && <span className="ml-2 text-amber-300">avg {parseFloat(vendor.avg_rating).toFixed(1)}/10</span>}
+              {vendor.avg_rating && <span className="ml-2 text-amber-600">avg {parseFloat(vendor.avg_rating).toFixed(1)}/10</span>}
             </p>
           </div>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-900"><X size={16} /></button>
@@ -149,7 +149,7 @@ function RatingsModal({ vendor, onClose, onRated }: { vendor: Vendor; onClose: (
             })}
           </div>
           {display > 0 && (
-            <p className="text-xs text-center text-amber-300">{display}/10</p>
+            <p className="text-xs text-center text-amber-600 font-medium">{display}/10</p>
           )}
           <textarea
             value={comment}
@@ -337,11 +337,11 @@ export default function VendorsPage() {
                         {v.phone_number && <p className="text-gray-600 text-xs">{v.phone_number}</p>}
                         {v.whatsapp_link && (
                           <a href={v.whatsapp_link} target="_blank" rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-300">
+                            className="flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700">
                             <ExternalLink size={11} /> WhatsApp
                           </a>
                         )}
-                        {v.telegram_id && <p className="text-xs text-sky-400">{v.telegram_id}</p>}
+                        {v.telegram_id && <p className="text-xs text-sky-600">{v.telegram_id}</p>}
                       </td>
                       <td className="px-4 py-3 text-gray-600 text-sm">{v.country || '—'}</td>
                       <td className="px-4 py-3">

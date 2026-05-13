@@ -29,13 +29,13 @@ export const ROLE_COLORS: Record<string, string> = {
 };
 
 export const FB_STATUS_COLORS: Record<string, string> = {
-  New: 'bg-emerald-500/20 text-emerald-300',
-  Active: 'bg-blue-500/20 text-blue-300',
-  Disabled: 'bg-red-500/20 text-red-300',
+  New: 'bg-gray-100 text-gray-600',
+  Active: 'bg-blue-50 text-blue-700',
+  Disabled: 'bg-red-50 text-red-600',
 };
 
 export const CLIENT_TYPE_COLORS: Record<string, string> = {
-  Blaster: 'bg-orange-500/20 text-orange-300',
-  Reseller: 'bg-violet-500/20 text-violet-300',
-  Owner: 'bg-emerald-500/20 text-emerald-300',
+  Blaster: 'bg-orange-50 text-orange-700',
+  Reseller: 'bg-violet-50 text-violet-700',
+  Owner: 'bg-emerald-50 text-emerald-700',
 };

@@ -102,12 +102,12 @@ function ShiftGuide({ shift }: { shift: Shift }) {
   const slotsB = SHIFT_SLOTS.Evening;
   const displaySlots = isDay ? [...slotsB, ...slotsA] : SHIFT_SLOTS[shift as 'Morning' | 'Evening'];
 
-  const slotColor = shift === 'Morning' ? 'bg-amber-500/15 border-amber-500/30 text-amber-300'
-    : shift === 'Evening' ? 'bg-blue-500/15 border-blue-500/30 text-blue-300'
-    : 'bg-green-500/15 border-green-500/30 text-green-700';
+  const slotColor = shift === 'Morning' ? 'bg-amber-50 border-amber-200 text-amber-700'
+    : shift === 'Evening' ? 'bg-blue-50 border-blue-200 text-blue-700'
+    : 'bg-green-50 border-green-200 text-green-700';
 
-  const accentColor = shift === 'Morning' ? 'text-amber-300'
-    : shift === 'Evening' ? 'text-blue-300'
+  const accentColor = shift === 'Morning' ? 'text-amber-600'
+    : shift === 'Evening' ? 'text-blue-600'
     : 'text-green-700';
 
   const groupExamples = isDay
@@ -163,9 +163,9 @@ function ShiftGuide({ shift }: { shift: Shift }) {
             <p className="text-xs font-medium text-gray-500 mb-2">Story Content Types</p>
             <Bullets items={STORY_TYPES} />
           </div>
-          <div className="flex items-start gap-2 p-3 bg-amber-500/10 border border-amber-500/25 rounded-xl">
-            <span className="text-amber-400 font-bold text-xs flex-shrink-0">⚠</span>
-            <p className="text-xs text-amber-300">Post story immediately at shift start — before sending any greeting messages.</p>
+          <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+            <span className="text-amber-600 font-bold text-xs flex-shrink-0">⚠</span>
+            <p className="text-xs text-amber-700">Post story immediately at shift start — before sending any greeting messages.</p>
           </div>
         </div>
       </SectionCard>
@@ -311,9 +311,9 @@ function PostModal({ onClose, task, onSaved }: { onClose: () => void; task?: Dai
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 const SHIFT_META: Record<Shift, { label: string; icon: React.ReactNode; color: string; badge: string }> = {
-  Morning: { label: 'Morning Shift (A)', icon: <Moon size={14} />, color: 'text-amber-300', badge: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
-  Evening: { label: 'Evening Shift (B)', icon: <Sunrise size={14} />, color: 'text-blue-300',  badge: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
-  Day:     { label: 'Day Shift',         icon: <Sun size={14} />,     color: 'text-emerald-300', badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
+  Morning: { label: 'Morning Shift (A)', icon: <Moon size={14} />, color: 'text-amber-600', badge: 'bg-amber-50 text-amber-700 border-amber-200' },
+  Evening: { label: 'Evening Shift (B)', icon: <Sunrise size={14} />, color: 'text-blue-600',  badge: 'bg-blue-50 text-blue-700 border-blue-200' },
+  Day:     { label: 'Day Shift',         icon: <Sun size={14} />,     color: 'text-green-700', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
 };
 
 export default function DailyTaskPage() {
@@ -407,7 +407,7 @@ export default function DailyTaskPage() {
             {tasks.map(t => (
               <button key={t.id} onClick={() => setSelected(t)}
                 className={cn('w-full text-left px-3 py-2.5 rounded-xl transition-colors', t.id === selected?.id ? 'bg-green-500/15 border border-green-500/30' : 'hover:bg-gray-100')}>
-                <p className={cn('text-sm font-medium truncate', t.id === selected?.id ? 'text-green-700' : 'text-white')}>{t.title}</p>
+                <p className={cn('text-sm font-medium truncate', t.id === selected?.id ? 'text-green-700' : 'text-gray-800')}>{t.title}</p>
                 <p className="text-xs text-gray-400">{formatDate(t.task_date)}</p>
               </button>
             ))}

@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, ClipboardList, Users,
   MessageCircle, BookOpen, Bot, Video, UserCog, Settings, LogOut,
-  CalendarClock, Smartphone, Flag, ShoppingBag, X, Globe,
+  CalendarClock, ShoppingBag, X, Globe, Contact, Linkedin,
 } from 'lucide-react';
 import { useAuthStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
@@ -15,11 +15,10 @@ const NAV = [
   { href: '/dashboard/daily-task', label: 'Daily Task', icon: ClipboardList },
   { href: '/dashboard/shift-tasks', label: 'Shift Tasks', icon: CalendarClock },
   { href: '/dashboard/clients', label: 'Clients', icon: Users },
+  { href: '/dashboard/profiles', label: 'My Profiles', icon: Contact },
   { href: '/dashboard/facebook-groups', label: 'Facebook Groups', icon: Globe },
-  { href: '/dashboard/facebook-ids', label: 'Facebook IDs', icon: UserCog },
-  { href: '/dashboard/facebook-page-ids', label: 'FB Page IDs', icon: Flag },
+  { href: '/dashboard/linkedin-groups', label: 'LinkedIn Groups', icon: Linkedin },
   { href: '/dashboard/whatsapp-groups', label: 'WhatsApp Groups', icon: MessageCircle },
-  { href: '/dashboard/whatsapp-ids', label: 'WhatsApp IDs', icon: Smartphone },
   { href: '/dashboard/vendors', label: 'Vendor List', icon: ShoppingBag },
   { href: '/dashboard/instructions', label: 'Instructions', icon: BookOpen },
   { href: '/dashboard/nebs-seller-pro', label: 'Nebs-Seller Pro', icon: Bot },
@@ -28,6 +27,7 @@ const NAV = [
 
 const ADMIN_NAV = [
   { href: '/dashboard/members', label: 'Members', icon: Users },
+  { href: '/dashboard/member-profiles', label: 'Member Profiles', icon: UserCog },
 ];
 
 interface SidebarProps {
@@ -51,7 +51,6 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             <p className="text-xs text-gray-400">Portal</p>
           </div>
         </Link>
-        {/* Close button — mobile only */}
         <button onClick={onClose} className="lg:hidden text-gray-400 hover:text-gray-600 p-1">
           <X size={18} />
         </button>

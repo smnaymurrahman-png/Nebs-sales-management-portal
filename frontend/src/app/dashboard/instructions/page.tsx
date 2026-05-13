@@ -54,7 +54,7 @@ function Modal({ onClose, item, onSaved }: { onClose: () => void; item?: Instruc
           </div>
           <div>
             <label className="block text-xs text-gray-500 mb-1">Sort Order</label>
-            <input type="number" value={form.sort_order} onChange={e => setForm(f => ({ ...f, sort_order: Number(e.target.value) }))}
+            <input type="number" value={form.sort_order === 0 ? '' : form.sort_order} onChange={e => setForm(f => ({ ...f, sort_order: parseInt(e.target.value) || 0 }))}
               className="w-32 bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
           </div>
           <div>
@@ -75,11 +75,11 @@ function Modal({ onClose, item, onSaved }: { onClose: () => void; item?: Instruc
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'Posting Instructions': 'bg-green-500/15 text-green-700',
-  'LinkedIn Policy': 'bg-blue-500/20 text-blue-300',
-  'Facebook Policy': 'bg-sky-500/20 text-sky-300',
-  'Group Making': 'bg-emerald-500/20 text-emerald-300',
-  'General': 'bg-gray-200 text-gray-600',
+  'Posting Instructions': 'bg-green-50 text-green-700',
+  'LinkedIn Policy': 'bg-blue-50 text-blue-700',
+  'Facebook Policy': 'bg-sky-50 text-sky-700',
+  'Group Making': 'bg-emerald-50 text-emerald-700',
+  'General': 'bg-gray-100 text-gray-600',
 };
 
 export default function InstructionsPage() {
@@ -131,7 +131,7 @@ export default function InstructionsPage() {
             {filtered.map(i => (
               <button key={i.id} onClick={() => setSelected(i)}
                 className={cn('w-full text-left px-3 py-2.5 rounded-xl transition-colors', i.id === selected?.id ? 'bg-green-500/15 border border-green-500/30' : 'hover:bg-gray-100')}>
-                <p className={cn('text-sm font-medium truncate', i.id === selected?.id ? 'text-green-700' : 'text-white')}>{i.title}</p>
+                <p className={cn('text-sm font-medium truncate', i.id === selected?.id ? 'text-green-700' : 'text-gray-800')}>{i.title}</p>
                 {i.category && (
                   <span className={cn('text-xs px-1.5 py-0.5 rounded mt-1 inline-block', CATEGORY_COLORS[i.category] || 'bg-gray-200 text-gray-500')}>{i.category}</span>
                 )}

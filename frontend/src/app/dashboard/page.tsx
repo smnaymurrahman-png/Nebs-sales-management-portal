@@ -93,7 +93,7 @@ export default function DashboardPage() {
             <Link href="/dashboard/clients" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm rounded-xl transition-colors">
               Add Client
             </Link>
-            <Link href="/dashboard/nebs-seller-pro" className="px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-300 text-sm rounded-xl transition-colors">
+            <Link href="/dashboard/nebs-seller-pro" className="px-4 py-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 text-sm rounded-xl transition-colors">
               Ask Nebs-Seller Pro
             </Link>
           </div>
