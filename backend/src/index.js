@@ -27,6 +27,7 @@ app.use('/api/tutorials', require('./routes/tutorials'));
 app.use('/api/chat', require('./routes/chat'));
 app.use('/api/whatsapp-ids', require('./routes/whatsappIds'));
 app.use('/api/facebook-page-ids', require('./routes/facebookPageIds'));
+app.use('/api/vendors', require('./routes/vendors'));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -184,6 +185,30 @@ async function initDB() {
       added_by VARCHAR(36) REFERENCES users(id) ON DELETE SET NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS vendors (
+      id VARCHAR(36) PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      phone_number VARCHAR(50),
+      whatsapp_link VARCHAR(500),
+      telegram_id VARCHAR(255),
+      vendor_type VARCHAR(100),
+      country VARCHAR(100),
+      added_by VARCHAR(36) REFERENCES users(id) ON DELETE SET NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS vendor_ratings (
+      id VARCHAR(36) PRIMARY KEY,
+      vendor_id VARCHAR(36) NOT NULL REFERENCES vendors(id) ON DELETE CASCADE,
+      rating INT NOT NULL CHECK (rating >= 1 AND rating <= 10),
+      comment TEXT,
+      rated_by VARCHAR(36) REFERENCES users(id) ON DELETE SET NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
   await pool.query(`
