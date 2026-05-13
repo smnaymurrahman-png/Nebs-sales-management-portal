@@ -91,7 +91,7 @@ export default function NebsSellerProPage() {
     <div className="flex flex-col h-screen">
       <TopBar title="Nebs-Seller Pro" subtitle="AI-powered sales assistant"
         actions={messages.length > 0 && (
-          <button onClick={() => setMessages([])} className="flex items-center gap-2 px-3 py-2 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 text-sm rounded-xl transition-colors">
+          <button onClick={() => setMessages([])} className="flex items-center gap-2 px-3 py-2 text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 text-sm rounded-xl transition-colors">
             <Trash2 size={14} /> Clear
           </button>
         )} />
@@ -100,16 +100,16 @@ export default function NebsSellerProPage() {
         {messages.length === 0 && (
           <div className="max-w-2xl mx-auto pt-8">
             <div className="flex flex-col items-center text-center mb-8">
-              <div className="w-16 h-16 bg-gradient-to-br from-violet-600 to-emerald-600 rounded-2xl flex items-center justify-center mb-4">
-                <Bot size={32} className="text-white" />
+              <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-emerald-600 rounded-2xl flex items-center justify-center mb-4">
+                <Bot size={32} className="text-gray-900" />
               </div>
-              <h2 className="text-xl font-semibold text-white mb-2">Nebs-Seller Pro</h2>
-              <p className="text-slate-400 text-sm">Your AI sales mentor. Ask anything about clients, marketing, and sales strategies.</p>
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">Nebs-Seller Pro</h2>
+              <p className="text-gray-500 text-sm">Your AI sales mentor. Ask anything about clients, marketing, and sales strategies.</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
               {SUGGESTIONS.map(s => (
                 <button key={s} onClick={() => send(s)}
-                  className="p-3 bg-slate-900 border border-slate-800 hover:border-violet-500/40 hover:bg-slate-800 rounded-xl text-left text-sm text-slate-300 transition-colors">
+                  className="p-3 bg-white border border-gray-200 hover:border-green-500/40 hover:bg-gray-100 rounded-xl text-left text-sm text-gray-600 transition-colors">
                   {s}
                 </button>
               ))}
@@ -120,13 +120,13 @@ export default function NebsSellerProPage() {
         {messages.map((msg, i) => (
           <div key={i} className={cn('flex gap-3 max-w-3xl', msg.role === 'user' ? 'ml-auto flex-row-reverse' : '')}>
             <div className={cn('w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5',
-              msg.role === 'assistant' ? 'bg-gradient-to-br from-violet-600 to-emerald-600' : 'bg-slate-700')}>
-              {msg.role === 'assistant' ? <Bot size={16} className="text-white" /> : <User size={16} className="text-slate-300" />}
+              msg.role === 'assistant' ? 'bg-gradient-to-br from-green-600 to-emerald-600' : 'bg-gray-200')}>
+              {msg.role === 'assistant' ? <Bot size={16} className="text-gray-900" /> : <User size={16} className="text-gray-600" />}
             </div>
             <div className={cn('rounded-2xl px-4 py-3 text-sm leading-relaxed max-w-[80%]',
-              msg.role === 'user' ? 'bg-violet-600 text-white' : 'bg-slate-900 border border-slate-800 text-slate-200')}>
+              msg.role === 'user' ? 'bg-green-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
               {msg.content || (msg.role === 'assistant' && loading && i === messages.length - 1 ? (
-                <span className="flex items-center gap-2 text-slate-400"><Loader2 size={14} className="animate-spin" /> Thinking...</span>
+                <span className="flex items-center gap-2 text-gray-500"><Loader2 size={14} className="animate-spin" /> Thinking...</span>
               ) : null)}
               {msg.role === 'assistant' && msg.content && (
                 <div className="whitespace-pre-wrap">{msg.content}</div>
@@ -138,7 +138,7 @@ export default function NebsSellerProPage() {
         <div ref={bottomRef} />
       </div>
 
-      <div className="p-4 border-t border-slate-800">
+      <div className="p-4 border-t border-gray-200">
         <div className="max-w-3xl mx-auto flex gap-3">
           <textarea
             value={input}
@@ -146,15 +146,15 @@ export default function NebsSellerProPage() {
             onKeyDown={handleKey}
             placeholder="Ask Nebs-Seller Pro anything..."
             rows={1}
-            className="flex-1 bg-slate-900 border border-slate-800 focus:border-violet-500 rounded-2xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none resize-none transition-colors"
+            className="flex-1 bg-white border border-gray-200 focus:border-green-500 rounded-2xl px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none resize-none transition-colors"
             style={{ minHeight: '48px', maxHeight: '160px' }}
           />
           <button onClick={() => send()} disabled={!input.trim() || loading}
-            className="w-12 h-12 bg-violet-600 hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-2xl flex items-center justify-center transition-colors flex-shrink-0">
+            className="w-12 h-12 bg-green-600 hover:bg-green-700 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-2xl flex items-center justify-center transition-colors flex-shrink-0">
             {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
           </button>
         </div>
-        <p className="text-center text-xs text-slate-600 mt-2">Press Enter to send · Shift+Enter for new line</p>
+        <p className="text-center text-xs text-gray-400 mt-2">Press Enter to send · Shift+Enter for new line</p>
       </div>
     </div>
   );

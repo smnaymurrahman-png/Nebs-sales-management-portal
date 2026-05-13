@@ -32,39 +32,39 @@ function Modal({ onClose, item, onSaved }: { onClose: () => void; item?: Instruc
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-slide-up">
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between sticky top-0 bg-slate-900">
-          <h2 className="font-semibold text-white">{item ? 'Edit Instruction' : 'Add Instruction'}</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-white">✕</button>
+      <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-slide-up">
+        <div className="p-5 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white">
+          <h2 className="font-semibold text-gray-900">{item ? 'Edit Instruction' : 'Add Instruction'}</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-900">✕</button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Title *</label>
+              <label className="block text-xs text-gray-500 mb-1">Title *</label>
               <input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} required
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
             </div>
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Category</label>
+              <label className="block text-xs text-gray-500 mb-1">Category</label>
               <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500">
                 {CATEGORIES.map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
           </div>
           <div>
-            <label className="block text-xs text-slate-400 mb-1">Sort Order</label>
+            <label className="block text-xs text-gray-500 mb-1">Sort Order</label>
             <input type="number" value={form.sort_order} onChange={e => setForm(f => ({ ...f, sort_order: Number(e.target.value) }))}
-              className="w-32 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+              className="w-32 bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
           </div>
           <div>
-            <label className="block text-xs text-slate-400 mb-1">Content *</label>
+            <label className="block text-xs text-gray-500 mb-1">Content *</label>
             <textarea value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} required rows={14}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500 resize-none font-mono" />
+              className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500 resize-none font-mono" />
           </div>
           <div className="flex justify-end gap-3 pt-2">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-slate-400 hover:text-white bg-slate-800 rounded-xl">Cancel</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-violet-600 hover:bg-violet-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-900 bg-gray-100 rounded-xl">Cancel</button>
+            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
               {loading && <Loader2 size={14} className="animate-spin" />} Save
             </button>
           </div>
@@ -75,11 +75,11 @@ function Modal({ onClose, item, onSaved }: { onClose: () => void; item?: Instruc
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'Posting Instructions': 'bg-violet-500/20 text-violet-300',
+  'Posting Instructions': 'bg-green-500/15 text-green-700',
   'LinkedIn Policy': 'bg-blue-500/20 text-blue-300',
   'Facebook Policy': 'bg-sky-500/20 text-sky-300',
   'Group Making': 'bg-emerald-500/20 text-emerald-300',
-  'General': 'bg-slate-700 text-slate-300',
+  'General': 'bg-gray-200 text-gray-600',
 };
 
 export default function InstructionsPage() {
@@ -106,34 +106,34 @@ export default function InstructionsPage() {
   const filtered = items.filter(i => !filter || i.category === filter);
   const categories = [...new Set(items.map(i => i.category).filter(Boolean))];
 
-  if (loading) return <div className="flex items-center justify-center h-64"><Loader2 size={24} className="animate-spin text-violet-400" /></div>;
+  if (loading) return <div className="flex items-center justify-center h-64"><Loader2 size={24} className="animate-spin text-green-600" /></div>;
 
   return (
     <div>
       <TopBar title="Instructions" subtitle="Team guidelines and policies"
         actions={isAdmin && (
-          <button onClick={() => { setEditItem(null); setShowModal(true); }} className="flex items-center gap-2 px-3 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm rounded-xl">
+          <button onClick={() => { setEditItem(null); setShowModal(true); }} className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-xl">
             <Plus size={16} /> Add
           </button>
         )} />
 
       <div className="flex h-[calc(100vh-73px)]">
-        <div className="w-72 border-r border-slate-800 overflow-y-auto p-3 flex-shrink-0">
+        <div className="w-72 border-r border-gray-200 overflow-y-auto p-3 flex-shrink-0">
           <div className="mb-3">
             <select value={filter} onChange={e => setFilter(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-violet-500">
+              className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-xs text-gray-900 focus:outline-none focus:border-green-500">
               <option value="">All Categories</option>
               {categories.map(c => <option key={c}>{c}</option>)}
             </select>
           </div>
           <div className="space-y-1">
-            {filtered.length === 0 && <p className="text-xs text-slate-500 px-2">No instructions</p>}
+            {filtered.length === 0 && <p className="text-xs text-gray-400 px-2">No instructions</p>}
             {filtered.map(i => (
               <button key={i.id} onClick={() => setSelected(i)}
-                className={cn('w-full text-left px-3 py-2.5 rounded-xl transition-colors', i.id === selected?.id ? 'bg-violet-600/20 border border-violet-500/30' : 'hover:bg-slate-800')}>
-                <p className={cn('text-sm font-medium truncate', i.id === selected?.id ? 'text-violet-300' : 'text-white')}>{i.title}</p>
+                className={cn('w-full text-left px-3 py-2.5 rounded-xl transition-colors', i.id === selected?.id ? 'bg-green-500/15 border border-green-500/30' : 'hover:bg-gray-100')}>
+                <p className={cn('text-sm font-medium truncate', i.id === selected?.id ? 'text-green-700' : 'text-white')}>{i.title}</p>
                 {i.category && (
-                  <span className={cn('text-xs px-1.5 py-0.5 rounded mt-1 inline-block', CATEGORY_COLORS[i.category] || 'bg-slate-700 text-slate-400')}>{i.category}</span>
+                  <span className={cn('text-xs px-1.5 py-0.5 rounded mt-1 inline-block', CATEGORY_COLORS[i.category] || 'bg-gray-200 text-gray-500')}>{i.category}</span>
                 )}
               </button>
             ))}
@@ -145,26 +145,26 @@ export default function InstructionsPage() {
             <div className="p-6 max-w-3xl">
               <div className="flex items-start justify-between mb-6">
                 <div>
-                  <h2 className="text-2xl font-bold text-white">{selected.title}</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">{selected.title}</h2>
                   {selected.category && (
-                    <span className={cn('text-xs px-2 py-0.5 rounded-full mt-2 inline-block', CATEGORY_COLORS[selected.category] || 'bg-slate-700 text-slate-400')}>
+                    <span className={cn('text-xs px-2 py-0.5 rounded-full mt-2 inline-block', CATEGORY_COLORS[selected.category] || 'bg-gray-200 text-gray-500')}>
                       {selected.category}
                     </span>
                   )}
                 </div>
                 {isAdmin && (
                   <div className="flex gap-2">
-                    <button onClick={() => { setEditItem(selected); setShowModal(true); }} className="p-2 text-slate-400 hover:text-violet-300 hover:bg-violet-500/10 rounded-lg transition-colors"><Edit2 size={16} /></button>
-                    <button onClick={() => del(selected.id)} className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 size={16} /></button>
+                    <button onClick={() => { setEditItem(selected); setShowModal(true); }} className="p-2 text-gray-500 hover:text-green-700 hover:bg-green-500/10 rounded-lg transition-colors"><Edit2 size={16} /></button>
+                    <button onClick={() => del(selected.id)} className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 size={16} /></button>
                   </div>
                 )}
               </div>
-              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                <pre className="text-slate-200 text-sm leading-relaxed whitespace-pre-wrap font-sans">{selected.content}</pre>
+              <div className="bg-white border border-gray-200 rounded-2xl p-6">
+                <pre className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap font-sans">{selected.content}</pre>
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center h-full text-slate-500"><p>Select an instruction</p></div>
+            <div className="flex items-center justify-center h-full text-gray-400"><p>Select an instruction</p></div>
           )}
         </div>
       </div>

@@ -19,13 +19,13 @@ interface Stats {
 
 function StatCard({ icon: Icon, label, value, color, href }: { icon: any; label: string; value: number; color: string; href: string }) {
   return (
-    <Link href={href} className={cn('bg-slate-900 border border-slate-800 rounded-2xl p-5 flex items-center gap-4 hover:border-slate-700 transition-colors group')}>
+    <Link href={href} className={cn('bg-white border border-gray-200 rounded-2xl p-5 flex items-center gap-4 hover:border-gray-200 transition-colors group')}>
       <div className={cn('w-11 h-11 rounded-xl flex items-center justify-center', color)}>
-        <Icon size={20} className="text-white" />
+        <Icon size={20} className="text-gray-900" />
       </div>
       <div>
-        <p className="text-2xl font-bold text-white group-hover:text-violet-300 transition-colors">{value}</p>
-        <p className="text-xs text-slate-400">{label}</p>
+        <p className="text-2xl font-bold text-gray-900 group-hover:text-green-700 transition-colors">{value}</p>
+        <p className="text-xs text-gray-500">{label}</p>
       </div>
     </Link>
   );
@@ -73,7 +73,7 @@ export default function DashboardPage() {
       <TopBar title="Dashboard" subtitle={`${greeting}, ${user?.full_name?.split(' ')[0]}`} />
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-          <StatCard icon={ClipboardList} label="Clients" value={stats?.total_clients ?? 0} color="bg-violet-600" href="/dashboard/clients" />
+          <StatCard icon={ClipboardList} label="Clients" value={stats?.total_clients ?? 0} color="bg-green-600" href="/dashboard/clients" />
           <StatCard icon={Facebook} label="FB Groups" value={stats?.fb_groups ?? 0} color="bg-blue-600" href="/dashboard/facebook-groups" />
           <StatCard icon={UserCheck} label="FB IDs" value={stats?.fb_ids ?? 0} color="bg-sky-600" href="/dashboard/facebook-ids" />
           <StatCard icon={MessageCircle} label="WA Groups" value={stats?.wa_groups ?? 0} color="bg-emerald-600" href="/dashboard/whatsapp-groups" />
@@ -84,13 +84,13 @@ export default function DashboardPage() {
           )}
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-          <h2 className="text-base font-semibold text-white mb-4">Quick Actions</h2>
+        <div className="bg-white border border-gray-200 rounded-2xl p-5">
+          <h2 className="text-base font-semibold text-gray-900 mb-4">Quick Actions</h2>
           <div className="flex flex-wrap gap-3">
-            <Link href="/dashboard/daily-task" className="px-4 py-2 bg-violet-600/20 hover:bg-violet-600/30 border border-violet-500/30 text-violet-300 text-sm rounded-xl transition-colors">
+            <Link href="/dashboard/daily-task" className="px-4 py-2 bg-green-500/15 hover:bg-green-500/25 border border-green-500/30 text-green-700 text-sm rounded-xl transition-colors">
               View Today&apos;s Task
             </Link>
-            <Link href="/dashboard/clients" className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm rounded-xl transition-colors">
+            <Link href="/dashboard/clients" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm rounded-xl transition-colors">
               Add Client
             </Link>
             <Link href="/dashboard/nebs-seller-pro" className="px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-300 text-sm rounded-xl transition-colors">

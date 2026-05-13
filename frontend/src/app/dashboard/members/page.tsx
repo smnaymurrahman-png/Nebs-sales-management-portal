@@ -36,38 +36,38 @@ function MemberModal({ onClose, member, onSaved, currentUserRole }: { onClose: (
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md animate-slide-up">
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between">
-          <h2 className="font-semibold text-white">{member ? 'Edit Member' : 'Add Member'}</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-white">✕</button>
+      <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-md animate-slide-up">
+        <div className="p-5 border-b border-gray-200 flex items-center justify-between">
+          <h2 className="font-semibold text-gray-900">{member ? 'Edit Member' : 'Add Member'}</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-900">✕</button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           {[['Full Name *', 'full_name', 'text'], ['Work Email *', 'work_email', 'email'], ['Designation', 'designation', 'text']].map(([label, key, type]) => (
             <div key={key}>
-              <label className="block text-xs text-slate-400 mb-1">{label}</label>
+              <label className="block text-xs text-gray-500 mb-1">{label}</label>
               <input type={type} value={(form as any)[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))} required={key !== 'designation'}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
             </div>
           ))}
           {!member && (
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Password *</label>
+              <label className="block text-xs text-gray-500 mb-1">Password *</label>
               <input type="password" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} required
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
             </div>
           )}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Role</label>
+              <label className="block text-xs text-gray-500 mb-1">Role</label>
               <select value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500">
                 {roleOptions.map(([val, label]) => <option key={val} value={val}>{label}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Shift</label>
+              <label className="block text-xs text-gray-500 mb-1">Shift</label>
               <select value={form.shift} onChange={e => setForm(f => ({ ...f, shift: e.target.value }))}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500">
                 <option value="Morning">Morning</option>
                 <option value="Evening">Evening</option>
                 <option value="Day">Day</option>
@@ -75,8 +75,8 @@ function MemberModal({ onClose, member, onSaved, currentUserRole }: { onClose: (
             </div>
           </div>
           <div className="flex justify-end gap-3 pt-2">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-slate-400 hover:text-white bg-slate-800 rounded-xl">Cancel</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-violet-600 hover:bg-violet-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-900 bg-gray-100 rounded-xl">Cancel</button>
+            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
               {loading && <Loader2 size={14} className="animate-spin" />} Save
             </button>
           </div>
@@ -101,21 +101,21 @@ function ResetPwdModal({ onClose, member }: { onClose: () => void; member: Membe
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-sm animate-slide-up">
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between">
-          <h2 className="font-semibold text-white">Reset Password</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-white">✕</button>
+      <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-sm animate-slide-up">
+        <div className="p-5 border-b border-gray-200 flex items-center justify-between">
+          <h2 className="font-semibold text-gray-900">Reset Password</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-900">✕</button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
-          <p className="text-sm text-slate-400">Reset password for <span className="text-white font-medium">{member.full_name}</span></p>
+          <p className="text-sm text-gray-500">Reset password for <span className="text-gray-900 font-medium">{member.full_name}</span></p>
           <div>
-            <label className="block text-xs text-slate-400 mb-1">New Password *</label>
+            <label className="block text-xs text-gray-500 mb-1">New Password *</label>
             <input type="password" value={pwd} onChange={e => setPwd(e.target.value)} required minLength={6}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+              className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
           </div>
           <div className="flex justify-end gap-3">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-slate-400 hover:text-white bg-slate-800 rounded-xl">Cancel</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-amber-600 hover:bg-amber-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-900 bg-gray-100 rounded-xl">Cancel</button>
+            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-amber-600 hover:bg-amber-700 text-gray-900 rounded-xl flex items-center gap-2 disabled:opacity-60">
               {loading && <Loader2 size={14} className="animate-spin" />} Reset
             </button>
           </div>
@@ -157,23 +157,23 @@ export default function MembersPage() {
     <div>
       <TopBar title="Members" subtitle={`${members.length} team members`}
         actions={
-          <button onClick={() => { setEditMember(null); setShowModal(true); }} className="flex items-center gap-2 px-3 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm rounded-xl">
+          <button onClick={() => { setEditMember(null); setShowModal(true); }} className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-xl">
             <UserPlus size={16} /> Add Member
           </button>
         } />
 
       <div className="p-6 space-y-4">
         <div className="relative max-w-sm">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search members..."
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+            className="w-full bg-white border border-gray-200 rounded-xl pl-9 pr-4 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
         </div>
 
-        {loading ? <div className="flex justify-center py-16"><Loader2 size={24} className="animate-spin text-violet-400" /></div> : (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+        {loading ? <div className="flex justify-center py-16"><Loader2 size={24} className="animate-spin text-green-600" /></div> : (
+          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-800 text-slate-400 text-xs uppercase tracking-wider">
+                <tr className="border-b border-gray-200 text-gray-500 text-xs uppercase tracking-wider">
                   <th className="px-4 py-3 text-left">Name</th>
                   <th className="px-4 py-3 text-left">Email</th>
                   <th className="px-4 py-3 text-left">Designation</th>
@@ -183,26 +183,26 @@ export default function MembersPage() {
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
-                {filtered.length === 0 && <tr><td colSpan={7} className="py-12 text-center text-slate-500">No members found</td></tr>}
+              <tbody className="divide-y divide-gray-100">
+                {filtered.length === 0 && <tr><td colSpan={7} className="py-12 text-center text-gray-400">No members found</td></tr>}
                 {filtered.map(m => (
-                  <tr key={m.id} className="hover:bg-slate-800/50 transition-colors">
-                    <td className="px-4 py-3 font-medium text-white">{m.full_name}</td>
-                    <td className="px-4 py-3 text-slate-300">{m.work_email}</td>
-                    <td className="px-4 py-3 text-slate-400">{m.designation || '—'}</td>
+                  <tr key={m.id} className="hover:bg-gray-50/80 transition-colors">
+                    <td className="px-4 py-3 font-medium text-gray-900">{m.full_name}</td>
+                    <td className="px-4 py-3 text-gray-600">{m.work_email}</td>
+                    <td className="px-4 py-3 text-gray-500">{m.designation || '—'}</td>
                     <td className="px-4 py-3">
                       <span className={cn('text-xs px-2.5 py-1 rounded-full font-medium', ROLE_COLORS[m.role])}>{ROLE_LABELS[m.role]}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={cn('text-xs px-2.5 py-1 rounded-full font-medium', SHIFT_COLORS[m.shift] || 'bg-slate-700 text-slate-400')}>{m.shift || 'Morning'}</span>
+                      <span className={cn('text-xs px-2.5 py-1 rounded-full font-medium', SHIFT_COLORS[m.shift] || 'bg-gray-200 text-gray-500')}>{m.shift || 'Morning'}</span>
                     </td>
-                    <td className="px-4 py-3 text-slate-500 text-xs">{formatDate(m.created_at)}</td>
+                    <td className="px-4 py-3 text-gray-400 text-xs">{formatDate(m.created_at)}</td>
                     <td className="px-4 py-3">
                       <div className="flex gap-1">
-                        <button onClick={() => { setEditMember(m); setShowModal(true); }} className="p-1.5 text-slate-400 hover:text-violet-300 hover:bg-violet-500/10 rounded-lg"><Edit2 size={14} /></button>
-                        <button onClick={() => { setResetMember(m); setShowReset(true); }} className="p-1.5 text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg"><KeyRound size={14} /></button>
+                        <button onClick={() => { setEditMember(m); setShowModal(true); }} className="p-1.5 text-gray-500 hover:text-green-700 hover:bg-green-500/10 rounded-lg"><Edit2 size={14} /></button>
+                        <button onClick={() => { setResetMember(m); setShowReset(true); }} className="p-1.5 text-gray-500 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg"><KeyRound size={14} /></button>
                         {m.id !== user?.id && (
-                          <button onClick={() => del(m.id)} className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg"><Trash2 size={14} /></button>
+                          <button onClick={() => del(m.id)} className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg"><Trash2 size={14} /></button>
                         )}
                       </div>
                     </td>

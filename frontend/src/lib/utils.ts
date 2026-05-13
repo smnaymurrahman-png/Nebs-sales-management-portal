@@ -23,9 +23,9 @@ export const ROLE_LABELS: Record<string, string> = {
 };
 
 export const ROLE_COLORS: Record<string, string> = {
-  super_admin: 'bg-purple-500/20 text-purple-300 border border-purple-500/30',
-  admin: 'bg-blue-500/20 text-blue-300 border border-blue-500/30',
-  user: 'bg-slate-500/20 text-slate-300 border border-slate-500/30',
+  super_admin: 'bg-purple-100 text-purple-700 border border-purple-200',
+  admin: 'bg-blue-100 text-blue-700 border border-blue-200',
+  user: 'bg-gray-100 text-gray-600 border border-gray-200',
 };
 
 export const FB_STATUS_COLORS: Record<string, string> = {

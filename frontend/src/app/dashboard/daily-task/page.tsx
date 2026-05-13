@@ -55,7 +55,7 @@ const STORY_TYPES = [
 // ─── Shared UI components ─────────────────────────────────────────────────────
 function SectionCard({ title, accent, children }: { title: string; accent: string; children: React.ReactNode }) {
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+    <div className="bg-white border border-gray-200 rounded-2xl p-5 space-y-4">
       <h3 className={cn('text-sm font-semibold uppercase tracking-wider', accent)}>{title}</h3>
       {children}
     </div>
@@ -66,8 +66,8 @@ function Bullets({ items }: { items: string[] }) {
   return (
     <ul className="space-y-1.5">
       {items.map((item, i) => (
-        <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-          <span className="text-violet-400 mt-0.5 flex-shrink-0">•</span>{item}
+        <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+          <span className="text-green-600 mt-0.5 flex-shrink-0">•</span>{item}
         </li>
       ))}
     </ul>
@@ -79,14 +79,14 @@ function MiniTable({ headers, rows }: { headers: string[]; rows: string[][] }) {
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-slate-700">
-            {headers.map(h => <th key={h} className="pb-2 pr-6 text-left text-xs text-slate-400 uppercase tracking-wider">{h}</th>)}
+          <tr className="border-b border-gray-200">
+            {headers.map(h => <th key={h} className="pb-2 pr-6 text-left text-xs text-gray-500 uppercase tracking-wider">{h}</th>)}
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-800/60">
+        <tbody className="divide-y divide-gray-100/60">
           {rows.map((row, i) => (
             <tr key={i}>
-              {row.map((cell, j) => <td key={j} className="py-2 pr-6 text-slate-300 text-sm">{cell}</td>)}
+              {row.map((cell, j) => <td key={j} className="py-2 pr-6 text-gray-600 text-sm">{cell}</td>)}
             </tr>
           ))}
         </tbody>
@@ -104,11 +104,11 @@ function ShiftGuide({ shift }: { shift: Shift }) {
 
   const slotColor = shift === 'Morning' ? 'bg-amber-500/15 border-amber-500/30 text-amber-300'
     : shift === 'Evening' ? 'bg-blue-500/15 border-blue-500/30 text-blue-300'
-    : 'bg-violet-500/15 border-violet-500/30 text-violet-300';
+    : 'bg-green-500/15 border-green-500/30 text-green-700';
 
   const accentColor = shift === 'Morning' ? 'text-amber-300'
     : shift === 'Evening' ? 'text-blue-300'
-    : 'text-violet-300';
+    : 'text-green-700';
 
   const groupExamples = isDay
     ? [...FB_GROUP_EXAMPLES.Evening, ...FB_GROUP_EXAMPLES.Morning]
@@ -119,7 +119,7 @@ function ShiftGuide({ shift }: { shift: Shift }) {
       {/* Schedule */}
       <SectionCard title="Daily Schedule" accent={accentColor}>
         {isDay && (
-          <p className="text-xs text-slate-500 -mt-2">Day shift combines Evening (4 PM–9 PM) + Morning (10 PM–2 AM) schedules.</p>
+          <p className="text-xs text-gray-400 -mt-2">Day shift combines Evening (4 PM–9 PM) + Morning (10 PM–2 AM) schedules.</p>
         )}
         <div className="grid gap-3 sm:grid-cols-2">
           {displaySlots.map(({ slot, time, activity }) => (
@@ -128,7 +128,7 @@ function ShiftGuide({ shift }: { shift: Shift }) {
               <div>
                 <p className="font-semibold text-sm">{slot}</p>
                 <p className="text-xs opacity-75 mt-0.5">{time}</p>
-                <p className="text-xs mt-1 text-white/90">{activity}</p>
+                <p className="text-xs mt-1 text-gray-900/90">{activity}</p>
               </div>
             </div>
           ))}
@@ -139,28 +139,28 @@ function ShiftGuide({ shift }: { shift: Shift }) {
       <SectionCard title="Template Making" accent={accentColor}>
         <div className="space-y-4">
           <div>
-            <p className="text-xs font-medium text-slate-400 mb-2">Facebook Template Making</p>
+            <p className="text-xs font-medium text-gray-500 mb-2">Facebook Template Making</p>
             <Bullets items={[
               'Create minimum 1 Facebook post template for each ID or Page.',
               'Create minimum 1 Story template for each ID or Page.',
             ]} />
           </div>
           <div>
-            <p className="text-xs font-medium text-slate-400 mb-2">Template Distribution by Page</p>
+            <p className="text-xs font-medium text-gray-500 mb-2">Template Distribution by Page</p>
             <MiniTable
               headers={['Page', 'Template 1', 'Template 2']}
               rows={[['Page 1','Primary Database','Secondary Database'],['Page 2','Primary Database','Secondary Database'],['Page 3','Primary Database','Secondary Database'],['Page 4','Primary Database','Secondary Database']]}
             />
           </div>
           <div>
-            <p className="text-xs font-medium text-slate-400 mb-2">Story Templates — 3 Total (one per platform)</p>
+            <p className="text-xs font-medium text-gray-500 mb-2">Story Templates — 3 Total (one per platform)</p>
             <MiniTable
               headers={['#', 'Platform', 'Story Type']}
               rows={[['1','Facebook Pages','Page story post'],['2','Business WhatsApp','WA status/story post'],['3','Telegram','Telegram story post']]}
             />
           </div>
           <div>
-            <p className="text-xs font-medium text-slate-400 mb-2">Story Content Types</p>
+            <p className="text-xs font-medium text-gray-500 mb-2">Story Content Types</p>
             <Bullets items={STORY_TYPES} />
           </div>
           <div className="flex items-start gap-2 p-3 bg-amber-500/10 border border-amber-500/25 rounded-xl">
@@ -174,25 +174,25 @@ function ShiftGuide({ shift }: { shift: Shift }) {
       <SectionCard title="Facebook Tasks" accent={accentColor}>
         <div className="space-y-4">
           <div>
-            <p className="text-xs font-medium text-slate-400 mb-2">A. Page Wall Posting</p>
+            <p className="text-xs font-medium text-gray-500 mb-2">A. Page Wall Posting</p>
             <Bullets items={[
               'Post on the wall of each Page — total 4 Pages.',
               'Write a different caption for each Page — do not copy-paste the same content.',
             ]} />
           </div>
           <div>
-            <p className="text-xs font-medium text-slate-400 mb-2">B. Group Posting</p>
+            <p className="text-xs font-medium text-gray-500 mb-2">B. Group Posting</p>
             <MiniTable
               headers={['Page', 'Daily Posts', 'Rule']}
               rows={[['Page 1','10–15 group posts','5 min gap between posts'],['Page 2','10–15 group posts','5 min gap between posts'],['Page 3','10–15 group posts','5 min gap between posts'],['Page 4','10–15 group posts','5 min gap between posts']]}
             />
           </div>
           <div>
-            <p className="text-xs font-medium text-slate-400 mb-2">C. Group Invitations</p>
+            <p className="text-xs font-medium text-gray-500 mb-2">C. Group Invitations</p>
             <Bullets items={['Send 20 invitations per Group.', 'Total daily target: 200 invitations combined.']} />
           </div>
           <div>
-            <p className="text-xs font-medium text-slate-400 mb-2">D. Facebook Group Maintenance</p>
+            <p className="text-xs font-medium text-gray-500 mb-2">D. Facebook Group Maintenance</p>
             <MiniTable headers={['Group Type', 'Example']} rows={groupExamples.map(g => [g.type, g.example])} />
             <div className="mt-3">
               <Bullets items={['Delete spam posts.', 'Maintain group rules.', 'Keep welcome post updated.', 'Ban irrelevant members.', 'Maintain scheduled posts.']} />
@@ -205,7 +205,7 @@ function ShiftGuide({ shift }: { shift: Shift }) {
       <SectionCard title="LinkedIn Tasks" accent={accentColor}>
         <div className="space-y-4">
           <div>
-            <p className="text-xs font-medium text-slate-400 mb-2">Personal Account</p>
+            <p className="text-xs font-medium text-gray-500 mb-2">Personal Account</p>
             <MiniTable
               headers={['Task', 'Daily Target', 'Details']}
               rows={[
@@ -218,11 +218,11 @@ function ShiftGuide({ shift }: { shift: Shift }) {
             />
           </div>
           <div>
-            <p className="text-xs font-medium text-slate-400 mb-2">LinkedIn Page</p>
+            <p className="text-xs font-medium text-gray-500 mb-2">LinkedIn Page</p>
             <Bullets items={['Send follow invites — minimum 20/day.', 'Post all content on the Page.', 'Keep welcome post, pin post, and About section updated.']} />
           </div>
           <div>
-            <p className="text-xs font-medium text-slate-400 mb-2">LinkedIn Group</p>
+            <p className="text-xs font-medium text-gray-500 mb-2">LinkedIn Group</p>
             <Bullets items={['Maintain minimum 1 own group.', 'Send 15 invitations/day to your own group.', 'Post daily in your own group and team members\' groups.']} />
           </div>
         </div>
@@ -273,33 +273,33 @@ function PostModal({ onClose, task, onSaved }: { onClose: () => void; task?: Dai
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl animate-slide-up">
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between">
-          <h2 className="font-semibold text-white">{task ? 'Edit Post' : 'New Team Post'}</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-white">✕</button>
+      <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-2xl animate-slide-up">
+        <div className="p-5 border-b border-gray-200 flex items-center justify-between">
+          <h2 className="font-semibold text-gray-900">{task ? 'Edit Post' : 'New Team Post'}</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-900">✕</button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-slate-400 mb-1.5">Title</label>
+              <label className="block text-sm text-gray-500 mb-1.5">Title</label>
               <input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} required
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
             </div>
             <div>
-              <label className="block text-sm text-slate-400 mb-1.5">Date</label>
+              <label className="block text-sm text-gray-500 mb-1.5">Date</label>
               <input type="date" value={form.task_date} onChange={e => setForm(f => ({ ...f, task_date: e.target.value }))} required
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
             </div>
           </div>
           <div>
-            <label className="block text-sm text-slate-400 mb-1.5">Content</label>
+            <label className="block text-sm text-gray-500 mb-1.5">Content</label>
             <textarea value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} required rows={12}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500 resize-none font-mono"
+              className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500 resize-none font-mono"
               placeholder="Paste your daily task content here..." />
           </div>
           <div className="flex justify-end gap-3">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-slate-400 hover:text-white bg-slate-800 rounded-xl">Cancel</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-violet-600 hover:bg-violet-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-900 bg-gray-100 rounded-xl">Cancel</button>
+            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
               {loading && <Loader2 size={14} className="animate-spin" />} Save
             </button>
           </div>
@@ -356,7 +356,7 @@ export default function DailyTaskPage() {
               {SHIFT_META[userShift].icon} {SHIFT_META[userShift].label}
             </span>
             {isAdmin && tab === 'posts' && (
-              <button onClick={() => { setEditTask(null); setShowModal(true); }} className="flex items-center gap-2 px-3 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm rounded-xl">
+              <button onClick={() => { setEditTask(null); setShowModal(true); }} className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-xl">
                 <Plus size={16} /> New Post
               </button>
             )}
@@ -365,16 +365,16 @@ export default function DailyTaskPage() {
       />
 
       {/* Tabs */}
-      <div className="border-b border-slate-800 px-6 flex gap-1 flex-shrink-0">
+      <div className="border-b border-gray-200 px-6 flex gap-1 flex-shrink-0">
         <button onClick={() => setTab('shift')}
           className={cn('px-4 py-3 text-sm font-medium border-b-2 transition-colors -mb-px',
-            tab === 'shift' ? 'border-violet-500 text-violet-300' : 'border-transparent text-slate-400 hover:text-white')}>
+            tab === 'shift' ? 'border-green-500 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-900')}>
           My Shift Tasks
         </button>
         <button onClick={() => setTab('posts')}
           className={cn('px-4 py-3 text-sm font-medium border-b-2 transition-colors -mb-px',
-            tab === 'posts' ? 'border-violet-500 text-violet-300' : 'border-transparent text-slate-400 hover:text-white')}>
-          Team Posts {tasks.length > 0 && <span className="ml-1.5 text-xs bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded-full">{tasks.length}</span>}
+            tab === 'posts' ? 'border-green-500 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-900')}>
+          Team Posts {tasks.length > 0 && <span className="ml-1.5 text-xs bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded-full">{tasks.length}</span>}
         </button>
       </div>
 
@@ -387,7 +387,7 @@ export default function DailyTaskPage() {
               {(['Morning', 'Evening', 'Day'] as Shift[]).map(s => (
                 <button key={s} onClick={() => setViewShift(s)}
                   className={cn('flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-colors',
-                    viewShift === s ? SHIFT_META[s].badge : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white')}>
+                    viewShift === s ? SHIFT_META[s].badge : 'bg-white border-gray-200 text-gray-500 hover:text-gray-900')}>
                   {SHIFT_META[s].icon} {s}
                 </button>
               ))}
@@ -401,14 +401,14 @@ export default function DailyTaskPage() {
       {tab === 'posts' && (
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar list */}
-          <div className="w-64 border-r border-slate-800 overflow-y-auto p-3 space-y-1 flex-shrink-0">
-            {loading && <div className="flex justify-center py-8"><Loader2 size={18} className="animate-spin text-violet-400" /></div>}
-            {!loading && tasks.length === 0 && <p className="text-sm text-slate-500 p-2">No posts yet</p>}
+          <div className="w-64 border-r border-gray-200 overflow-y-auto p-3 space-y-1 flex-shrink-0">
+            {loading && <div className="flex justify-center py-8"><Loader2 size={18} className="animate-spin text-green-600" /></div>}
+            {!loading && tasks.length === 0 && <p className="text-sm text-gray-400 p-2">No posts yet</p>}
             {tasks.map(t => (
               <button key={t.id} onClick={() => setSelected(t)}
-                className={cn('w-full text-left px-3 py-2.5 rounded-xl transition-colors', t.id === selected?.id ? 'bg-violet-600/20 border border-violet-500/30' : 'hover:bg-slate-800')}>
-                <p className={cn('text-sm font-medium truncate', t.id === selected?.id ? 'text-violet-300' : 'text-white')}>{t.title}</p>
-                <p className="text-xs text-slate-500">{formatDate(t.task_date)}</p>
+                className={cn('w-full text-left px-3 py-2.5 rounded-xl transition-colors', t.id === selected?.id ? 'bg-green-500/15 border border-green-500/30' : 'hover:bg-gray-100')}>
+                <p className={cn('text-sm font-medium truncate', t.id === selected?.id ? 'text-green-700' : 'text-white')}>{t.title}</p>
+                <p className="text-xs text-gray-400">{formatDate(t.task_date)}</p>
               </button>
             ))}
           </div>
@@ -419,33 +419,33 @@ export default function DailyTaskPage() {
               <div className="p-6 max-w-3xl">
                 <div className="flex items-start justify-between mb-6">
                   <div>
-                    <h2 className="text-2xl font-bold text-white">{selected.title}</h2>
-                    <p className="text-sm text-slate-400 mt-1">{formatDate(selected.task_date)} · Posted by {selected.creator_name}</p>
+                    <h2 className="text-2xl font-bold text-gray-900">{selected.title}</h2>
+                    <p className="text-sm text-gray-500 mt-1">{formatDate(selected.task_date)} · Posted by {selected.creator_name}</p>
                   </div>
                   {isAdmin && (
                     <div className="flex gap-2">
-                      <button onClick={() => { setEditTask(selected); setShowModal(true); }} className="p-2 text-slate-400 hover:text-violet-300 hover:bg-violet-500/10 rounded-lg transition-colors"><Edit2 size={16} /></button>
-                      <button onClick={() => del(selected.id)} className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 size={16} /></button>
+                      <button onClick={() => { setEditTask(selected); setShowModal(true); }} className="p-2 text-gray-500 hover:text-green-700 hover:bg-green-500/10 rounded-lg transition-colors"><Edit2 size={16} /></button>
+                      <button onClick={() => del(selected.id)} className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 size={16} /></button>
                     </div>
                   )}
                 </div>
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                  <pre className="text-slate-200 text-sm leading-relaxed whitespace-pre-wrap font-sans">{selected.content}</pre>
+                <div className="bg-white border border-gray-200 rounded-2xl p-6">
+                  <pre className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap font-sans">{selected.content}</pre>
                 </div>
                 <div className="flex items-center justify-between mt-6">
                   <button disabled={idx <= 0} onClick={() => setSelected(tasks[idx - 1])}
-                    className="flex items-center gap-2 text-sm text-slate-400 disabled:opacity-30 hover:text-white transition-colors">
+                    className="flex items-center gap-2 text-sm text-gray-500 disabled:opacity-30 hover:text-gray-900 transition-colors">
                     <ChevronLeft size={16} /> Previous
                   </button>
-                  <span className="text-xs text-slate-500">{idx + 1} / {tasks.length}</span>
+                  <span className="text-xs text-gray-400">{idx + 1} / {tasks.length}</span>
                   <button disabled={idx >= tasks.length - 1} onClick={() => setSelected(tasks[idx + 1])}
-                    className="flex items-center gap-2 text-sm text-slate-400 disabled:opacity-30 hover:text-white transition-colors">
+                    className="flex items-center gap-2 text-sm text-gray-500 disabled:opacity-30 hover:text-gray-900 transition-colors">
                     Next <ChevronRight size={16} />
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-center h-full text-slate-500">
+              <div className="flex items-center justify-center h-full text-gray-400">
                 <p>Select a post from the list</p>
               </div>
             )}

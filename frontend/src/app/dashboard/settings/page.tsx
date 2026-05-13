@@ -35,7 +35,7 @@ export default function SettingsPage() {
     finally { setLoading(false); }
   }
 
-  const tabClass = (active: boolean) => cn('px-4 py-2 text-sm rounded-xl transition-colors', active ? 'bg-violet-600/20 text-violet-300' : 'text-slate-400 hover:text-white hover:bg-slate-800');
+  const tabClass = (active: boolean) => cn('px-4 py-2 text-sm rounded-xl transition-colors', active ? 'bg-green-500/15 text-green-700' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100');
 
   return (
     <div>
@@ -47,24 +47,24 @@ export default function SettingsPage() {
         </div>
 
         {tab === 'profile' && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-            <h2 className="font-semibold text-white mb-4">Profile Information</h2>
+          <div className="bg-white border border-gray-200 rounded-2xl p-6">
+            <h2 className="font-semibold text-gray-900 mb-4">Profile Information</h2>
             <form onSubmit={saveProfile} className="space-y-4">
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Full Name</label>
+                <label className="block text-xs text-gray-500 mb-1">Full Name</label>
                 <input value={profile.full_name} onChange={e => setProfile(p => ({ ...p, full_name: e.target.value }))}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+                  className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
               </div>
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Work Email</label>
-                <input value={user?.work_email} disabled className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-400 cursor-not-allowed" />
+                <label className="block text-xs text-gray-500 mb-1">Work Email</label>
+                <input value={user?.work_email} disabled className="w-full bg-gray-50/80 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-500 cursor-not-allowed" />
               </div>
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Designation</label>
+                <label className="block text-xs text-gray-500 mb-1">Designation</label>
                 <input value={profile.designation} onChange={e => setProfile(p => ({ ...p, designation: e.target.value }))}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+                  className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
               </div>
-              <button type="submit" disabled={loading} className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm rounded-xl disabled:opacity-60">
+              <button type="submit" disabled={loading} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-xl disabled:opacity-60">
                 {loading ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Save Changes
               </button>
             </form>
@@ -72,17 +72,17 @@ export default function SettingsPage() {
         )}
 
         {tab === 'password' && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-            <h2 className="font-semibold text-white mb-4">Change Password</h2>
+          <div className="bg-white border border-gray-200 rounded-2xl p-6">
+            <h2 className="font-semibold text-gray-900 mb-4">Change Password</h2>
             <form onSubmit={changePassword} className="space-y-4">
               {[['Current Password', 'current_password'], ['New Password', 'new_password'], ['Confirm Password', 'confirm']].map(([label, key]) => (
                 <div key={key}>
-                  <label className="block text-xs text-slate-400 mb-1">{label}</label>
+                  <label className="block text-xs text-gray-500 mb-1">{label}</label>
                   <input type="password" value={(pwd as any)[key]} onChange={e => setPwd(p => ({ ...p, [key]: e.target.value }))} required
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+                    className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
                 </div>
               ))}
-              <button type="submit" disabled={loading} className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm rounded-xl disabled:opacity-60">
+              <button type="submit" disabled={loading} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-xl disabled:opacity-60">
                 {loading ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Update Password
               </button>
             </form>

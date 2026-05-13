@@ -1,10 +1,11 @@
 'use client';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Zap, Eye, EyeOff, Loader2 } from 'lucide-react';
+import Image from 'next/image';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,42 +30,40 @@ export default function LoginPage() {
 
   return (
     <div className="w-full max-w-sm">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
+      <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg">
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 bg-violet-600 rounded-xl flex items-center justify-center">
-            <Zap size={20} className="text-white" />
-          </div>
+          <Image src="/logo.png" alt="Nebs Logo" width={44} height={44} className="rounded-xl flex-shrink-0" />
           <div>
-            <h1 className="text-lg font-semibold text-white">Nebs Seller Portal</h1>
-            <p className="text-xs text-slate-400">Nebs IT Solution Ltd</p>
+            <h1 className="text-lg font-semibold text-gray-900">Nebs Seller Portal</h1>
+            <p className="text-xs text-gray-400">Nebs IT Solution Ltd</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm text-slate-400 mb-1.5">Work Email</label>
+            <label className="block text-sm text-gray-500 mb-1.5">Work Email</label>
             <input
               type="email"
               value={form.work_email}
               onChange={e => setForm(f => ({ ...f, work_email: e.target.value }))}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-green-500 transition-colors"
               placeholder="you@nebs.com"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm text-slate-400 mb-1.5">Password</label>
+            <label className="block text-sm text-gray-500 mb-1.5">Password</label>
             <div className="relative">
               <input
                 type={showPwd ? 'text' : 'password'}
                 value={form.password}
                 onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 pr-11 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 pr-11 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-green-500 transition-colors"
                 placeholder="••••••••"
                 required
               />
-              <button type="button" onClick={() => setShowPwd(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300">
+              <button type="button" onClick={() => setShowPwd(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                 {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
@@ -73,7 +72,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white font-medium rounded-xl py-2.5 text-sm transition-colors flex items-center justify-center gap-2 mt-2"
+            className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white font-medium rounded-xl py-2.5 text-sm transition-colors flex items-center justify-center gap-2 mt-2"
           >
             {loading && <Loader2 size={16} className="animate-spin" />}
             Sign In

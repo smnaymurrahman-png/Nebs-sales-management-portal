@@ -1,9 +1,11 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
-  Zap, LayoutDashboard, ClipboardList, Users, Facebook,
-  MessageCircle, BookOpen, Bot, Video, UserCog, Settings, LogOut, CalendarClock, Smartphone, Flag, ShoppingBag,
+  LayoutDashboard, ClipboardList, Users,
+  MessageCircle, BookOpen, Bot, Video, UserCog, Settings, LogOut,
+  CalendarClock, Smartphone, Flag, ShoppingBag, X, Globe,
 } from 'lucide-react';
 import { useAuthStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
@@ -13,7 +15,7 @@ const NAV = [
   { href: '/dashboard/daily-task', label: 'Daily Task', icon: ClipboardList },
   { href: '/dashboard/shift-tasks', label: 'Shift Tasks', icon: CalendarClock },
   { href: '/dashboard/clients', label: 'Clients', icon: Users },
-  { href: '/dashboard/facebook-groups', label: 'Facebook Groups', icon: Facebook },
+  { href: '/dashboard/facebook-groups', label: 'Facebook Groups', icon: Globe },
   { href: '/dashboard/facebook-ids', label: 'Facebook IDs', icon: UserCog },
   { href: '/dashboard/facebook-page-ids', label: 'FB Page IDs', icon: Flag },
   { href: '/dashboard/whatsapp-groups', label: 'WhatsApp Groups', icon: MessageCircle },
@@ -28,25 +30,34 @@ const ADMIN_NAV = [
   { href: '/dashboard/members', label: 'Members', icon: Users },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
   const isAdmin = user?.role !== 'user';
 
-  return (
-    <aside className="w-60 bg-slate-900 border-r border-slate-800 flex flex-col h-screen sticky top-0">
-      <div className="p-4 border-b border-slate-800">
-        <Link href="/dashboard" className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-violet-600 rounded-xl flex items-center justify-center flex-shrink-0">
-            <Zap size={18} className="text-white" />
-          </div>
+  const content = (
+    <aside className="w-60 bg-white border-r border-gray-200 flex flex-col h-full">
+      {/* Logo */}
+      <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+        <Link href="/dashboard" className="flex items-center gap-3" onClick={onClose}>
+          <Image src="/logo.png" alt="Nebs Logo" width={36} height={36} className="rounded-xl flex-shrink-0" />
           <div>
-            <p className="text-sm font-semibold text-white leading-tight">Nebs Seller</p>
-            <p className="text-xs text-slate-400">Portal</p>
+            <p className="text-sm font-semibold text-gray-900 leading-tight">Nebs Seller</p>
+            <p className="text-xs text-gray-400">Portal</p>
           </div>
         </Link>
+        {/* Close button — mobile only */}
+        <button onClick={onClose} className="lg:hidden text-gray-400 hover:text-gray-600 p-1">
+          <X size={18} />
+        </button>
       </div>
 
+      {/* Nav */}
       <nav className="flex-1 overflow-y-auto p-3 space-y-0.5">
         {NAV.map(({ href, label, icon: Icon }) => {
           const active = href === '/dashboard' ? pathname === href : pathname.startsWith(href);
@@ -54,12 +65,15 @@ export default function Sidebar() {
             <Link
               key={href}
               href={href}
+              onClick={onClose}
               className={cn(
                 'flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-colors',
-                active ? 'bg-violet-600/20 text-violet-300 font-medium' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                active
+                  ? 'bg-green-50 text-green-700 font-medium'
+                  : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
               )}
             >
-              <Icon size={16} className="flex-shrink-0" />
+              <Icon size={16} className={cn('flex-shrink-0', active ? 'text-green-600' : '')} />
               {label}
             </Link>
           );
@@ -68,7 +82,7 @@ export default function Sidebar() {
         {isAdmin && (
           <>
             <div className="pt-3 pb-1 px-3">
-              <p className="text-xs text-slate-600 uppercase tracking-wider font-medium">Admin</p>
+              <p className="text-xs text-gray-400 uppercase tracking-wider font-medium">Admin</p>
             </div>
             {ADMIN_NAV.map(({ href, label, icon: Icon }) => {
               const active = pathname.startsWith(href);
@@ -76,12 +90,15 @@ export default function Sidebar() {
                 <Link
                   key={href}
                   href={href}
+                  onClick={onClose}
                   className={cn(
                     'flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-colors',
-                    active ? 'bg-violet-600/20 text-violet-300 font-medium' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                    active
+                      ? 'bg-green-50 text-green-700 font-medium'
+                      : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
                   )}
                 >
-                  <Icon size={16} className="flex-shrink-0" />
+                  <Icon size={16} className={cn('flex-shrink-0', active ? 'text-green-600' : '')} />
                   {label}
                 </Link>
               );
@@ -90,12 +107,16 @@ export default function Sidebar() {
         )}
       </nav>
 
-      <div className="p-3 border-t border-slate-800 space-y-0.5">
+      {/* Bottom */}
+      <div className="p-3 border-t border-gray-100 space-y-0.5">
         <Link
           href="/dashboard/settings"
+          onClick={onClose}
           className={cn(
             'flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-colors',
-            pathname === '/dashboard/settings' ? 'bg-violet-600/20 text-violet-300' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+            pathname === '/dashboard/settings'
+              ? 'bg-green-50 text-green-700'
+              : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
           )}
         >
           <Settings size={16} />
@@ -103,17 +124,34 @@ export default function Sidebar() {
         </Link>
         <button
           onClick={logout}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
         >
           <LogOut size={16} />
           Sign Out
         </button>
 
         <div className="px-3 py-2 mt-1">
-          <p className="text-sm font-medium text-white truncate">{user?.full_name}</p>
-          <p className="text-xs text-slate-500 truncate">{user?.work_email}</p>
+          <p className="text-sm font-medium text-gray-900 truncate">{user?.full_name}</p>
+          <p className="text-xs text-gray-400 truncate">{user?.work_email}</p>
         </div>
       </div>
     </aside>
+  );
+
+  return (
+    <>
+      {/* Desktop: always visible */}
+      <div className="hidden lg:flex h-screen sticky top-0">
+        {content}
+      </div>
+
+      {/* Mobile: slide-in drawer */}
+      <div className={cn(
+        'fixed inset-y-0 left-0 z-30 lg:hidden transition-transform duration-300',
+        open ? 'translate-x-0' : '-translate-x-full'
+      )}>
+        {content}
+      </div>
+    </>
   );
 }

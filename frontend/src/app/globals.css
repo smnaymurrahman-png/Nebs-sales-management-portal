@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 * { box-sizing: border-box; }
-body { @apply bg-slate-950 text-slate-100 font-sans; }
+body { @apply bg-gray-50 text-gray-900 font-sans; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { @apply bg-slate-900; }
-::-webkit-scrollbar-thumb { @apply bg-slate-700 rounded-full; }
+::-webkit-scrollbar-track { @apply bg-gray-100; }
+::-webkit-scrollbar-thumb { @apply bg-gray-300 rounded-full; }

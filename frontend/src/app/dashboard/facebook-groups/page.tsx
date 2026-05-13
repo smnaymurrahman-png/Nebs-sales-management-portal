@@ -44,44 +44,44 @@ function Modal({ onClose, group, onSaved }: { onClose: () => void; group?: FBGro
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-slide-up">
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between sticky top-0 bg-slate-900">
-          <h2 className="font-semibold text-white">{group ? 'Edit Group' : 'Add Facebook Group'}</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-white">✕</button>
+      <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-slide-up">
+        <div className="p-5 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white">
+          <h2 className="font-semibold text-gray-900">{group ? 'Edit Group' : 'Add Facebook Group'}</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-900">✕</button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             {[['Group Name *', 'group_name'], ['Group Link', 'group_link']].map(([label, key]) => (
               <div key={key}>
-                <label className="block text-xs text-slate-400 mb-1">{label}</label>
+                <label className="block text-xs text-gray-500 mb-1">{label}</label>
                 <input value={(form as any)[key]} onChange={e => setField(key, e.target.value)}
                   required={key === 'group_name'}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+                  className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
               </div>
             ))}
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Group Type</label>
+              <label className="block text-xs text-gray-500 mb-1">Group Type</label>
               <select value={form.group_type} onChange={e => setField('group_type', e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500">
                 <option value="">Select type</option>
                 {GROUP_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Group Members</label>
+              <label className="block text-xs text-gray-500 mb-1">Group Members</label>
               <input type="number" value={form.group_members}
                 onChange={e => setField('group_members', parseInt(e.target.value) || 0)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
             </div>
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Current Status</label>
+              <label className="block text-xs text-gray-500 mb-1">Current Status</label>
               <input value={form.group_current_status} onChange={e => setField('group_current_status', e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
             </div>
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Group Condition</label>
+              <label className="block text-xs text-gray-500 mb-1">Group Condition</label>
               <select value={form.group_condition} onChange={e => setField('group_condition', e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500">
                 <option value="">Select condition</option>
                 {GROUP_CONDITIONS.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
@@ -90,32 +90,32 @@ function Modal({ onClose, group, onSaved }: { onClose: () => void; group?: FBGro
           <div className="grid grid-cols-2 gap-4">
             {[['Owner FB ID Name', 'owner_fb_id_name'], ['Owner FB ID Link', 'owner_fb_id_link'], ['Backup Group Link', 'backup_group_link']].map(([label, key]) => (
               <div key={key}>
-                <label className="block text-xs text-slate-400 mb-1">{label}</label>
+                <label className="block text-xs text-gray-500 mb-1">{label}</label>
                 <input value={(form as any)[key]} onChange={e => setField(key, e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+                  className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
               </div>
             ))}
           </div>
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs text-slate-400">Group Admins</label>
+              <label className="text-xs text-gray-500">Group Admins</label>
               <button type="button" onClick={() => setForm(f => ({ ...f, admins: [...f.admins, ''] }))}
-                className="text-xs text-violet-400 hover:text-violet-300">+ Add Admin</button>
+                className="text-xs text-green-600 hover:text-green-700">+ Add Admin</button>
             </div>
             {form.admins.map((a, i) => (
               <div key={i} className="flex gap-2 mb-2">
                 <input value={a} onChange={e => setAdmin(i, e.target.value)} placeholder={`Admin ${i + 1} name`}
-                  className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+                  className="flex-1 bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
                 {form.admins.length > 1 && (
                   <button type="button" onClick={() => setForm(f => ({ ...f, admins: f.admins.filter((_, j) => j !== i) }))}
-                    className="text-slate-500 hover:text-red-400"><X size={14} /></button>
+                    className="text-gray-400 hover:text-red-400"><X size={14} /></button>
                 )}
               </div>
             ))}
           </div>
           <div className="flex justify-end gap-3 pt-2">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-slate-400 hover:text-white bg-slate-800 rounded-xl">Cancel</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-violet-600 hover:bg-violet-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-900 bg-gray-100 rounded-xl">Cancel</button>
+            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
               {loading && <Loader2 size={14} className="animate-spin" />} Save
             </button>
           </div>
@@ -149,23 +149,23 @@ export default function FacebookGroupsPage() {
     <div>
       <TopBar title="Facebook Groups" subtitle={`${groups.length} groups`}
         actions={
-          <button onClick={() => { setEditGroup(null); setShowModal(true); }} className="flex items-center gap-2 px-3 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm rounded-xl">
+          <button onClick={() => { setEditGroup(null); setShowModal(true); }} className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-xl">
             <Plus size={16} /> Add Group
           </button>
         } />
 
       <div className="p-6 space-y-4">
         <div className="relative max-w-sm">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search groups..."
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-violet-500" />
+            className="w-full bg-white border border-gray-200 rounded-xl pl-9 pr-4 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
         </div>
 
-        {loading ? <div className="flex justify-center py-16"><Loader2 size={24} className="animate-spin text-violet-400" /></div> : (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-x-auto">
+        {loading ? <div className="flex justify-center py-16"><Loader2 size={24} className="animate-spin text-green-600" /></div> : (
+          <div className="bg-white border border-gray-200 rounded-2xl overflow-x-auto">
             <table className="w-full text-sm min-w-[900px]">
               <thead>
-                <tr className="border-b border-slate-800 text-slate-400 text-xs uppercase tracking-wider">
+                <tr className="border-b border-gray-200 text-gray-500 text-xs uppercase tracking-wider">
                   <th className="px-4 py-3 text-left">Group Name</th>
                   <th className="px-4 py-3 text-left">Type</th>
                   <th className="px-4 py-3 text-left">Members</th>
@@ -176,13 +176,13 @@ export default function FacebookGroupsPage() {
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
-                {filtered.length === 0 && <tr><td colSpan={8} className="py-12 text-center text-slate-500">No groups found</td></tr>}
+              <tbody className="divide-y divide-gray-100">
+                {filtered.length === 0 && <tr><td colSpan={8} className="py-12 text-center text-gray-400">No groups found</td></tr>}
                 {filtered.map(g => (
-                  <tr key={g.id} className="hover:bg-slate-800/50 transition-colors">
+                  <tr key={g.id} className="hover:bg-gray-50/80 transition-colors">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-white">{g.group_name}</span>
+                        <span className="font-medium text-gray-900">{g.group_name}</span>
                         {g.group_link && (
                           <a href={g.group_link} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
                             <ExternalLink size={12} />
@@ -190,16 +190,16 @@ export default function FacebookGroupsPage() {
                         )}
                       </div>
                       {g.backup_group_link && (
-                        <a href={g.backup_group_link} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-500 hover:text-slate-400 flex items-center gap-1 mt-0.5">
+                        <a href={g.backup_group_link} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-500 flex items-center gap-1 mt-0.5">
                           Backup <ExternalLink size={10} />
                         </a>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-slate-300">{g.group_type || '—'}</td>
-                    <td className="px-4 py-3 text-slate-300">{g.group_members?.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-gray-600">{g.group_type || '—'}</td>
+                    <td className="px-4 py-3 text-gray-600">{g.group_members?.toLocaleString()}</td>
                     <td className="px-4 py-3">
                       <div className="space-y-0.5">
-                        {g.group_current_status && <p className="text-xs text-slate-300">{g.group_current_status}</p>}
+                        {g.group_current_status && <p className="text-xs text-gray-600">{g.group_current_status}</p>}
                         {g.group_condition && <span className={cn('text-xs px-1.5 py-0.5 rounded',
                           g.group_condition === 'Very Good' ? 'bg-emerald-500/20 text-emerald-300' :
                           g.group_condition === 'Good' ? 'bg-green-500/20 text-green-300' :
@@ -211,21 +211,21 @@ export default function FacebookGroupsPage() {
                     <td className="px-4 py-3">
                       {g.owner_fb_id_name && (
                         <div className="flex items-center gap-1">
-                          <span className="text-slate-300 text-xs">{g.owner_fb_id_name}</span>
+                          <span className="text-gray-600 text-xs">{g.owner_fb_id_name}</span>
                           {g.owner_fb_id_link && <a href={g.owner_fb_id_link} target="_blank" rel="noopener noreferrer" className="text-blue-400"><ExternalLink size={10} /></a>}
                         </div>
                       )}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1">
-                        {(g.admins || []).map((a, i) => <span key={i} className="text-xs bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded">{a}</span>)}
+                        {(g.admins || []).map((a, i) => <span key={i} className="text-xs bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded">{a}</span>)}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-slate-500 text-xs">{g.added_by_name}</td>
+                    <td className="px-4 py-3 text-gray-400 text-xs">{g.added_by_name}</td>
                     <td className="px-4 py-3">
                       <div className="flex gap-1">
-                        <button onClick={() => { setEditGroup(g); setShowModal(true); }} className="p-1.5 text-slate-400 hover:text-violet-300 hover:bg-violet-500/10 rounded-lg transition-colors"><Edit2 size={14} /></button>
-                        <button onClick={() => del(g.id)} className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 size={14} /></button>
+                        <button onClick={() => { setEditGroup(g); setShowModal(true); }} className="p-1.5 text-gray-500 hover:text-green-700 hover:bg-green-500/10 rounded-lg transition-colors"><Edit2 size={14} /></button>
+                        <button onClick={() => del(g.id)} className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 size={14} /></button>
                       </div>
                     </td>
                   </tr>

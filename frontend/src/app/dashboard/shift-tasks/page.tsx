@@ -73,8 +73,8 @@ const FB_MAINTENANCE = [
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-      <h3 className="text-sm font-semibold text-violet-300 mb-4 uppercase tracking-wider">{title}</h3>
+    <div className="bg-white border border-gray-200 rounded-2xl p-5">
+      <h3 className="text-sm font-semibold text-green-700 mb-4 uppercase tracking-wider">{title}</h3>
       {children}
     </div>
   );
@@ -84,8 +84,8 @@ function BulletList({ items }: { items: string[] }) {
   return (
     <ul className="space-y-1.5">
       {items.map((item, i) => (
-        <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-          <span className="text-violet-400 mt-0.5 flex-shrink-0">•</span>
+        <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+          <span className="text-green-600 mt-0.5 flex-shrink-0">•</span>
           {item}
         </li>
       ))}
@@ -98,15 +98,15 @@ function TableGrid({ headers, rows }: { headers: string[]; rows: string[][] }) {
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-slate-700 text-slate-400 text-xs uppercase tracking-wider">
+          <tr className="border-b border-gray-200 text-gray-500 text-xs uppercase tracking-wider">
             {headers.map(h => <th key={h} className="pb-2 pr-4 text-left">{h}</th>)}
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-800">
+        <tbody className="divide-y divide-gray-100">
           {rows.map((row, i) => (
             <tr key={i}>
               {row.map((cell, j) => (
-                <td key={j} className="py-2 pr-4 text-slate-300">{cell}</td>
+                <td key={j} className="py-2 pr-4 text-gray-600">{cell}</td>
               ))}
             </tr>
           ))}
@@ -148,7 +148,7 @@ export default function ShiftTasksPage() {
             <button key={tab.key} onClick={() => setActive(tab.key)}
               className={cn(
                 'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors',
-                active === tab.key ? colorMap[tab.color] : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                active === tab.key ? colorMap[tab.color] : 'bg-white border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-200'
               )}>
               {tab.icon} {tab.label}
             </button>
@@ -166,7 +166,7 @@ export default function ShiftTasksPage() {
                 <div>
                   <p className="font-semibold text-sm">{slot}</p>
                   <p className="text-xs opacity-80 mt-0.5">{time}</p>
-                  <p className="text-xs mt-1 text-white/90">{activity}</p>
+                  <p className="text-xs mt-1 text-gray-900/90">{activity}</p>
                 </div>
               </div>
             ))}
@@ -177,14 +177,14 @@ export default function ShiftTasksPage() {
         <Section title="Template Making">
           <div className="space-y-4">
             <div>
-              <p className="text-xs text-slate-400 mb-2 font-medium">Facebook Template Making</p>
+              <p className="text-xs text-gray-500 mb-2 font-medium">Facebook Template Making</p>
               <BulletList items={[
                 'Create minimum 1 Facebook post template for each ID or Page.',
                 'Create minimum 1 Story template for each ID or Page.',
               ]} />
             </div>
             <div>
-              <p className="text-xs text-slate-400 mb-2 font-medium">Page Template Distribution</p>
+              <p className="text-xs text-gray-500 mb-2 font-medium">Page Template Distribution</p>
               <TableGrid
                 headers={['Page', 'Template 1 — Data Type', 'Template 2 — Data Type']}
                 rows={[
@@ -196,7 +196,7 @@ export default function ShiftTasksPage() {
               />
             </div>
             <div>
-              <p className="text-xs text-slate-400 mb-2 font-medium">Story Template Making — 3 Total</p>
+              <p className="text-xs text-gray-500 mb-2 font-medium">Story Template Making — 3 Total</p>
               <TableGrid
                 headers={['#', 'Platform', 'Story Type']}
                 rows={[
@@ -207,7 +207,7 @@ export default function ShiftTasksPage() {
               />
             </div>
             <div>
-              <p className="text-xs text-slate-400 mb-2 font-medium">Story Types</p>
+              <p className="text-xs text-gray-500 mb-2 font-medium">Story Types</p>
               <BulletList items={STORY_TYPES} />
               <div className="mt-3 flex items-start gap-2 p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl">
                 <span className="text-amber-400 text-xs font-bold flex-shrink-0">⚠</span>
@@ -221,14 +221,14 @@ export default function ShiftTasksPage() {
         <Section title="Facebook Tasks">
           <div className="space-y-4">
             <div>
-              <p className="text-xs text-slate-400 mb-2 font-medium">A. Page Wall Posting</p>
+              <p className="text-xs text-gray-500 mb-2 font-medium">A. Page Wall Posting</p>
               <BulletList items={[
                 'Post on the wall of each Page — total 4 Pages.',
                 'Write a different caption for each Page — do not copy-paste the same content.',
               ]} />
             </div>
             <div>
-              <p className="text-xs text-slate-400 mb-2 font-medium">B. Group Posting</p>
+              <p className="text-xs text-gray-500 mb-2 font-medium">B. Group Posting</p>
               <TableGrid
                 headers={['Page', 'Daily Group Posts', 'Rule']}
                 rows={[
@@ -240,22 +240,22 @@ export default function ShiftTasksPage() {
               />
             </div>
             <div>
-              <p className="text-xs text-slate-400 mb-2 font-medium">C. Group Invitation</p>
+              <p className="text-xs text-gray-500 mb-2 font-medium">C. Group Invitation</p>
               <BulletList items={[
                 'Send 20 invitations to each Group.',
                 'Total daily target: 200 invitations combined.',
               ]} />
             </div>
             <div>
-              <p className="text-xs text-slate-400 mb-2 font-medium">D. Facebook Group Maintenance</p>
-              <p className="text-xs text-slate-500 mb-3">Keep your own groups always active and clean.</p>
+              <p className="text-xs text-gray-500 mb-2 font-medium">D. Facebook Group Maintenance</p>
+              <p className="text-xs text-gray-400 mb-3">Keep your own groups always active and clean.</p>
               <div className="mb-3">
                 <TableGrid
                   headers={['Group Type', 'Example']}
                   rows={groupExamples.map(g => [g.type, g.example])}
                 />
               </div>
-              <p className="text-xs text-slate-400 mb-2 font-medium">Maintenance Checklist</p>
+              <p className="text-xs text-gray-500 mb-2 font-medium">Maintenance Checklist</p>
               <BulletList items={FB_MAINTENANCE} />
             </div>
           </div>
@@ -265,7 +265,7 @@ export default function ShiftTasksPage() {
         <Section title="LinkedIn Tasks">
           <div className="space-y-4">
             <div>
-              <p className="text-xs text-slate-400 mb-2 font-medium">Personal Account Tasks</p>
+              <p className="text-xs text-gray-500 mb-2 font-medium">Personal Account Tasks</p>
               <TableGrid
                 headers={['Task', 'Daily Target', 'Details']}
                 rows={[
@@ -278,7 +278,7 @@ export default function ShiftTasksPage() {
               />
             </div>
             <div>
-              <p className="text-xs text-slate-400 mb-2 font-medium">LinkedIn Page Tasks</p>
+              <p className="text-xs text-gray-500 mb-2 font-medium">LinkedIn Page Tasks</p>
               <BulletList items={[
                 'Send follow invites — minimum 20 per day.',
                 'Post all content on the Page.',
@@ -286,7 +286,7 @@ export default function ShiftTasksPage() {
               ]} />
             </div>
             <div>
-              <p className="text-xs text-slate-400 mb-2 font-medium">LinkedIn Group Tasks</p>
+              <p className="text-xs text-gray-500 mb-2 font-medium">LinkedIn Group Tasks</p>
               <BulletList items={[
                 'Maintain minimum 1 own group.',
                 'Send 15 invitations per day to your own group.',
