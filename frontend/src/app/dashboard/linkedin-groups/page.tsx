@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Plus, Edit2, Trash2, Search, ExternalLink, X, Loader2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, ExternalLink, X, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import TopBar from '@/components/layout/TopBar';
 import api from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -14,16 +14,38 @@ interface LIGroup {
   group_members: number; group_condition: string; added_by_name: string;
 }
 
-function Modal({ onClose, group, onSaved }: { onClose: () => void; group?: LIGroup | null; onSaved: () => void }) {
+function normalizeUrl(url: string) {
+  return url.trim().toLowerCase().replace(/\/$/, '');
+}
+
+function detectLILink(url: string): boolean {
+  return /linkedin\.com\/(groups|company|in)\/[^/?&#\s]+/i.test(url);
+}
+
+function Modal({ onClose, group, groups, onSaved }: { onClose: () => void; group?: LIGroup | null; groups: LIGroup[]; onSaved: () => void }) {
   const [form, setForm] = useState({
     group_name: group?.group_name || '', group_link: group?.group_link || '',
     group_type: group?.group_type || '', group_members: group?.group_members || 0,
     group_condition: group?.group_condition || '',
   });
   const [loading, setLoading] = useState(false);
+  const [linkInfo, setLinkInfo] = useState<{ type: 'duplicate' | 'valid' | 'invalid' | null; message: string }>({ type: null, message: '' });
+
+  function handleLinkChange(val: string) {
+    setForm(p => ({ ...p, group_link: val }));
+    if (!val.trim()) { setLinkInfo({ type: null, message: '' }); return; }
+    const norm = normalizeUrl(val);
+    const dup = groups.find(g => g.id !== group?.id && normalizeUrl(g.group_link || '') === norm);
+    if (dup) { setLinkInfo({ type: 'duplicate', message: `Already exists: "${dup.group_name}"` }); return; }
+    if (detectLILink(val)) setLinkInfo({ type: 'valid', message: 'LinkedIn group link detected' });
+    else if (val.startsWith('http')) setLinkInfo({ type: 'invalid', message: 'Not a recognized LinkedIn group link' });
+    else setLinkInfo({ type: null, message: '' });
+  }
 
   async function submit(e: React.FormEvent) {
-    e.preventDefault(); setLoading(true);
+    e.preventDefault();
+    if (linkInfo.type === 'duplicate') { toast.error(linkInfo.message); return; }
+    setLoading(true);
     try {
       if (group) await api.put(`/linkedin-groups/${group.id}`, form);
       else await api.post('/linkedin-groups', form);
@@ -50,8 +72,22 @@ function Modal({ onClose, group, onSaved }: { onClose: () => void; group?: LIGro
             </div>
             <div>
               <label className="block text-xs text-gray-500 mb-1">Group Link</label>
-              <input value={form.group_link} onChange={e => f('group_link', e.target.value)} placeholder="https://linkedin.com/groups/..."
-                className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
+              <input value={form.group_link} onChange={e => handleLinkChange(e.target.value)} placeholder="https://linkedin.com/groups/..."
+                className={cn(
+                  'w-full bg-white border rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none',
+                  linkInfo.type === 'duplicate' ? 'border-red-400 focus:border-red-400' :
+                  linkInfo.type === 'valid' ? 'border-green-400 focus:border-green-500' :
+                  'border-gray-200 focus:border-green-500'
+                )} />
+              {linkInfo.type && (
+                <div className={cn('flex items-center gap-1 mt-1 text-xs',
+                  linkInfo.type === 'duplicate' ? 'text-red-500' :
+                  linkInfo.type === 'valid' ? 'text-green-600' : 'text-amber-600'
+                )}>
+                  {linkInfo.type === 'valid' ? <CheckCircle2 size={11} /> : <AlertCircle size={11} />}
+                  {linkInfo.message}
+                </div>
+              )}
             </div>
             <div>
               <label className="block text-xs text-gray-500 mb-1">Group Type</label>
@@ -78,7 +114,7 @@ function Modal({ onClose, group, onSaved }: { onClose: () => void; group?: LIGro
           </div>
           <div className="flex justify-end gap-3 pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-900 bg-gray-100 rounded-xl">Cancel</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
+            <button type="submit" disabled={loading || linkInfo.type === 'duplicate'} className="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
               {loading && <Loader2 size={14} className="animate-spin" />} Save
             </button>
           </div>
@@ -181,7 +217,7 @@ export default function LinkedInGroupsPage() {
           </div>
         )}
       </div>
-      {showModal && <Modal onClose={() => setShowModal(false)} group={editGroup} onSaved={load} />}
+      {showModal && <Modal onClose={() => setShowModal(false)} group={editGroup} groups={groups} onSaved={load} />}
     </div>
   );
 }

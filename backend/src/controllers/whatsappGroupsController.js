@@ -24,6 +24,18 @@ async function create(req, res) {
   const { group_name, group_link, admin_whatsapp, group_members, group_type, activity_status } = req.body;
   if (!group_name) return res.status(400).json({ error: 'group_name required' });
 
+  const { rows: nameCheck } = await pool.query(
+    `SELECT group_name FROM whatsapp_groups WHERE LOWER(TRIM(group_name)) = LOWER(TRIM($1))`, [group_name]
+  );
+  if (nameCheck.length) return res.status(409).json({ error: `A group named "${nameCheck[0].group_name}" already exists` });
+
+  if (group_link) {
+    const { rows: linkCheck } = await pool.query(
+      `SELECT group_name FROM whatsapp_groups WHERE LOWER(REGEXP_REPLACE(TRIM(group_link), '/$', '')) = LOWER(REGEXP_REPLACE(TRIM($1), '/$', ''))`, [group_link]
+    );
+    if (linkCheck.length) return res.status(409).json({ error: `This link already exists as "${linkCheck[0].group_name}"` });
+  }
+
   const { rows } = await pool.query(
     `INSERT INTO whatsapp_groups (id, group_name, group_link, admin_whatsapp, group_members, group_type, activity_status, added_by)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
@@ -34,10 +46,24 @@ async function create(req, res) {
 
 async function update(req, res) {
   const { group_name, group_link, admin_whatsapp, group_members, group_type, activity_status } = req.body;
+  const { id } = req.params;
+
+  const { rows: nameCheck } = await pool.query(
+    `SELECT group_name FROM whatsapp_groups WHERE LOWER(TRIM(group_name)) = LOWER(TRIM($1)) AND id != $2`, [group_name, id]
+  );
+  if (nameCheck.length) return res.status(409).json({ error: `A group named "${nameCheck[0].group_name}" already exists` });
+
+  if (group_link) {
+    const { rows: linkCheck } = await pool.query(
+      `SELECT group_name FROM whatsapp_groups WHERE LOWER(REGEXP_REPLACE(TRIM(group_link), '/$', '')) = LOWER(REGEXP_REPLACE(TRIM($1), '/$', '')) AND id != $2`, [group_link, id]
+    );
+    if (linkCheck.length) return res.status(409).json({ error: `This link already exists as "${linkCheck[0].group_name}"` });
+  }
+
   const { rows } = await pool.query(
     `UPDATE whatsapp_groups SET group_name=$1, group_link=$2, admin_whatsapp=$3, group_members=$4, group_type=$5, activity_status=$6
      WHERE id=$7 RETURNING *`,
-    [group_name, group_link, admin_whatsapp, group_members || 0, group_type, activity_status, req.params.id]
+    [group_name, group_link, admin_whatsapp, group_members || 0, group_type, activity_status, id]
   );
   res.json(rows[0]);
 }

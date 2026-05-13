@@ -11,6 +11,19 @@ async function getAll(req, res) {
 async function create(req, res) {
   const { group_name, group_link, group_type, group_members, group_condition } = req.body;
   if (!group_name) return res.status(400).json({ error: 'group_name required' });
+
+  const { rows: nameCheck } = await pool.query(
+    `SELECT group_name FROM linkedin_groups WHERE LOWER(TRIM(group_name)) = LOWER(TRIM($1))`, [group_name]
+  );
+  if (nameCheck.length) return res.status(409).json({ error: `A group named "${nameCheck[0].group_name}" already exists` });
+
+  if (group_link) {
+    const { rows: linkCheck } = await pool.query(
+      `SELECT group_name FROM linkedin_groups WHERE LOWER(REGEXP_REPLACE(TRIM(group_link), '/$', '')) = LOWER(REGEXP_REPLACE(TRIM($1), '/$', ''))`, [group_link]
+    );
+    if (linkCheck.length) return res.status(409).json({ error: `This link already exists as "${linkCheck[0].group_name}"` });
+  }
+
   const { rows } = await pool.query(
     `INSERT INTO linkedin_groups (id, group_name, group_link, group_type, group_members, group_condition, added_by)
      VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`,
@@ -21,9 +34,23 @@ async function create(req, res) {
 
 async function update(req, res) {
   const { group_name, group_link, group_type, group_members, group_condition } = req.body;
+  const { id } = req.params;
+
+  const { rows: nameCheck } = await pool.query(
+    `SELECT group_name FROM linkedin_groups WHERE LOWER(TRIM(group_name)) = LOWER(TRIM($1)) AND id != $2`, [group_name, id]
+  );
+  if (nameCheck.length) return res.status(409).json({ error: `A group named "${nameCheck[0].group_name}" already exists` });
+
+  if (group_link) {
+    const { rows: linkCheck } = await pool.query(
+      `SELECT group_name FROM linkedin_groups WHERE LOWER(REGEXP_REPLACE(TRIM(group_link), '/$', '')) = LOWER(REGEXP_REPLACE(TRIM($1), '/$', '')) AND id != $2`, [group_link, id]
+    );
+    if (linkCheck.length) return res.status(409).json({ error: `This link already exists as "${linkCheck[0].group_name}"` });
+  }
+
   const { rows } = await pool.query(
     `UPDATE linkedin_groups SET group_name=$1, group_link=$2, group_type=$3, group_members=$4, group_condition=$5 WHERE id=$6 RETURNING *`,
-    [group_name, group_link || null, group_type || null, group_members || 0, group_condition || null, req.params.id]
+    [group_name, group_link || null, group_type || null, group_members || 0, group_condition || null, id]
   );
   if (!rows.length) return res.status(404).json({ error: 'Not found' });
   res.json(rows[0]);

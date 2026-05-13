@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Plus, Edit2, Trash2, Search, ExternalLink, X, Loader2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, ExternalLink, X, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import TopBar from '@/components/layout/TopBar';
 import api from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -16,18 +16,62 @@ interface FBGroup {
   admins: string[]; added_by_name: string;
 }
 
-function Modal({ onClose, group, onSaved }: { onClose: () => void; group?: FBGroup | null; onSaved: () => void }) {
+function normalizeUrl(url: string) {
+  return url.trim().toLowerCase().replace(/\/$/, '');
+}
+
+function detectFBLink(url: string): { valid: boolean; groupId?: string } {
+  const match = url.match(/facebook\.com\/groups\/([^/?&#\s]+)/i);
+  if (match) return { valid: true, groupId: match[1] };
+  return { valid: false };
+}
+
+function extractFBGroupName(url: string): string {
+  const match = url.match(/facebook\.com\/groups\/([^/?&#\s]+)/i);
+  if (!match) return '';
+  return match[1].replace(/-/g, ' ').replace(/_/g, ' ');
+}
+
+function Modal({ onClose, group, groups, onSaved }: { onClose: () => void; group?: FBGroup | null; groups: FBGroup[]; onSaved: () => void }) {
   const [form, setForm] = useState({
     group_name: group?.group_name || '', group_link: group?.group_link || '',
     group_type: group?.group_type || '', group_members: group?.group_members || 0,
     group_current_status: group?.group_current_status || '', owner_fb_id_name: group?.owner_fb_id_name || '',
     owner_fb_id_link: group?.owner_fb_id_link || '', backup_group_link: group?.backup_group_link || '',
-    group_condition: group?.group_condition || '', admins: group?.admins || [''],
+    group_condition: group?.group_condition || '', admins: group?.admins?.length ? group.admins : [''],
   });
   const [loading, setLoading] = useState(false);
+  const [linkInfo, setLinkInfo] = useState<{ type: 'duplicate' | 'valid' | 'invalid' | null; message: string }>({ type: null, message: '' });
+
+  function handleLinkChange(val: string) {
+    setField('group_link', val);
+    if (!val.trim()) { setLinkInfo({ type: null, message: '' }); return; }
+
+    const norm = normalizeUrl(val);
+    const dup = groups.find(g => g.id !== group?.id && normalizeUrl(g.group_link || '') === norm);
+    if (dup) {
+      setLinkInfo({ type: 'duplicate', message: `Already exists: "${dup.group_name}"` });
+      return;
+    }
+
+    const detected = detectFBLink(val);
+    if (detected.valid) {
+      setLinkInfo({ type: 'valid', message: 'Facebook group link detected' });
+      if (!form.group_name && detected.groupId) {
+        const suggested = extractFBGroupName(val);
+        if (suggested) setField('group_name', suggested);
+      }
+    } else if (val.startsWith('http')) {
+      setLinkInfo({ type: 'invalid', message: 'Not a recognized Facebook group link' });
+    } else {
+      setLinkInfo({ type: null, message: '' });
+    }
+  }
 
   async function submit(e: React.FormEvent) {
-    e.preventDefault(); setLoading(true);
+    e.preventDefault();
+    if (linkInfo.type === 'duplicate') { toast.error(linkInfo.message); return; }
+    setLoading(true);
     try {
       const payload = { ...form, admins: form.admins.filter(a => a.trim()) };
       if (group) await api.put(`/facebook-groups/${group.id}`, payload);
@@ -51,14 +95,32 @@ function Modal({ onClose, group, onSaved }: { onClose: () => void; group?: FBGro
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            {[['Group Name *', 'group_name'], ['Group Link', 'group_link']].map(([label, key]) => (
-              <div key={key}>
-                <label className="block text-xs text-gray-500 mb-1">{label}</label>
-                <input value={(form as any)[key]} onChange={e => setField(key, e.target.value)}
-                  required={key === 'group_name'}
-                  className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
-              </div>
-            ))}
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Group Name *</label>
+              <input value={form.group_name} onChange={e => setField('group_name', e.target.value)} required
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Group Link</label>
+              <input value={form.group_link} onChange={e => handleLinkChange(e.target.value)}
+                placeholder="https://facebook.com/groups/..."
+                className={cn(
+                  'w-full bg-gray-100 border rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none',
+                  linkInfo.type === 'duplicate' ? 'border-red-400 focus:border-red-400' :
+                  linkInfo.type === 'valid' ? 'border-green-400 focus:border-green-500' :
+                  'border-gray-200 focus:border-green-500'
+                )} />
+              {linkInfo.type && (
+                <div className={cn('flex items-center gap-1 mt-1 text-xs',
+                  linkInfo.type === 'duplicate' ? 'text-red-500' :
+                  linkInfo.type === 'valid' ? 'text-green-600' : 'text-amber-600'
+                )}>
+                  {linkInfo.type === 'duplicate' ? <AlertCircle size={11} /> :
+                   linkInfo.type === 'valid' ? <CheckCircle2 size={11} /> : <AlertCircle size={11} />}
+                  {linkInfo.message}
+                </div>
+              )}
+            </div>
             <div>
               <label className="block text-xs text-gray-500 mb-1">Group Type</label>
               <select value={form.group_type} onChange={e => setField('group_type', e.target.value)}
@@ -115,7 +177,8 @@ function Modal({ onClose, group, onSaved }: { onClose: () => void; group?: FBGro
           </div>
           <div className="flex justify-end gap-3 pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-900 bg-gray-100 rounded-xl">Cancel</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
+            <button type="submit" disabled={loading || linkInfo.type === 'duplicate'}
+              className="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
               {loading && <Loader2 size={14} className="animate-spin" />} Save
             </button>
           </div>
@@ -235,7 +298,7 @@ export default function FacebookGroupsPage() {
           </div>
         )}
       </div>
-      {showModal && <Modal onClose={() => setShowModal(false)} group={editGroup} onSaved={load} />}
+      {showModal && <Modal onClose={() => setShowModal(false)} group={editGroup} groups={groups} onSaved={load} />}
     </div>
   );
 }

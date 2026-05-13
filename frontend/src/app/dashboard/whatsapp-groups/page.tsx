@@ -1,26 +1,64 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Plus, Edit2, Trash2, Search, ExternalLink, Loader2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, ExternalLink, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import TopBar from '@/components/layout/TopBar';
 import api from '@/lib/api';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
+
+const WA_TYPES = ['Data & Leads', 'Telemarketing', 'Review', 'Other'];
+const WA_STATUSES = ['Active', 'Inactive'];
 
 interface WAGroup {
   id: string; group_name: string; group_link: string; admin_whatsapp: string;
   group_members: number; group_type: string; activity_status: string; added_by_name: string;
 }
 
-function Modal({ onClose, group, onSaved }: { onClose: () => void; group?: WAGroup | null; onSaved: () => void }) {
+function normalizeUrl(url: string) {
+  return url.trim().toLowerCase().replace(/\/$/, '');
+}
+
+function detectWALink(url: string): { valid: boolean; type?: string } {
+  if (/chat\.whatsapp\.com\/[A-Za-z0-9]+/i.test(url)) return { valid: true, type: 'WhatsApp invite link' };
+  if (/wa\.me\/\+?\d+/i.test(url)) return { valid: true, type: 'WhatsApp direct link' };
+  if (/web\.whatsapp\.com/i.test(url)) return { valid: true, type: 'WhatsApp Web link' };
+  return { valid: false };
+}
+
+function Modal({ onClose, group, groups, onSaved }: { onClose: () => void; group?: WAGroup | null; groups: WAGroup[]; onSaved: () => void }) {
   const [form, setForm] = useState({
     group_name: group?.group_name || '', group_link: group?.group_link || '',
     admin_whatsapp: group?.admin_whatsapp || '', group_members: group?.group_members || 0,
     group_type: group?.group_type || '', activity_status: group?.activity_status || '',
   });
   const [loading, setLoading] = useState(false);
+  const [linkInfo, setLinkInfo] = useState<{ type: 'duplicate' | 'valid' | 'invalid' | null; message: string }>({ type: null, message: '' });
+
+  function handleLinkChange(val: string) {
+    setForm(f => ({ ...f, group_link: val }));
+    if (!val.trim()) { setLinkInfo({ type: null, message: '' }); return; }
+
+    const norm = normalizeUrl(val);
+    const dup = groups.find(g => g.id !== group?.id && normalizeUrl(g.group_link || '') === norm);
+    if (dup) {
+      setLinkInfo({ type: 'duplicate', message: `Already exists: "${dup.group_name}"` });
+      return;
+    }
+
+    const detected = detectWALink(val);
+    if (detected.valid) {
+      setLinkInfo({ type: 'valid', message: detected.type! });
+    } else if (val.startsWith('http')) {
+      setLinkInfo({ type: 'invalid', message: 'Not a recognized WhatsApp group link' });
+    } else {
+      setLinkInfo({ type: null, message: '' });
+    }
+  }
 
   async function submit(e: React.FormEvent) {
-    e.preventDefault(); setLoading(true);
+    e.preventDefault();
+    if (linkInfo.type === 'duplicate') { toast.error(linkInfo.message); return; }
+    setLoading(true);
     try {
       if (group) await api.put(`/whatsapp-groups/${group.id}`, form);
       else await api.post('/whatsapp-groups', form);
@@ -38,27 +76,64 @@ function Modal({ onClose, group, onSaved }: { onClose: () => void; group?: WAGro
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            {[
-              ['Group Name *', 'group_name'], ['Group Link', 'group_link'],
-              ['Admin WhatsApp', 'admin_whatsapp'], ['Group Type', 'group_type'],
-              ['Activity Status', 'activity_status'],
-            ].map(([label, key]) => (
-              <div key={key}>
-                <label className="block text-xs text-gray-500 mb-1">{label}</label>
-                <input value={(form as any)[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                  required={key === 'group_name'}
-                  className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
-              </div>
-            ))}
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Group Name *</label>
+              <input value={form.group_name} onChange={e => setForm(f => ({ ...f, group_name: e.target.value }))} required
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Group Link</label>
+              <input value={form.group_link} onChange={e => handleLinkChange(e.target.value)}
+                placeholder="https://chat.whatsapp.com/..."
+                className={cn(
+                  'w-full bg-gray-100 border rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none',
+                  linkInfo.type === 'duplicate' ? 'border-red-400 focus:border-red-400' :
+                  linkInfo.type === 'valid' ? 'border-green-400 focus:border-green-500' :
+                  'border-gray-200 focus:border-green-500'
+                )} />
+              {linkInfo.type && (
+                <div className={cn('flex items-center gap-1 mt-1 text-xs',
+                  linkInfo.type === 'duplicate' ? 'text-red-500' :
+                  linkInfo.type === 'valid' ? 'text-green-600' : 'text-amber-600'
+                )}>
+                  {linkInfo.type === 'valid' ? <CheckCircle2 size={11} /> : <AlertCircle size={11} />}
+                  {linkInfo.message}
+                </div>
+              )}
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Admin WhatsApp</label>
+              <input value={form.admin_whatsapp} onChange={e => setForm(f => ({ ...f, admin_whatsapp: e.target.value }))}
+                placeholder="+880..."
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
+            </div>
             <div>
               <label className="block text-xs text-gray-500 mb-1">Group Members</label>
-              <input type="number" value={form.group_members === 0 ? '' : form.group_members} onChange={e => setForm(f => ({ ...f, group_members: parseInt(e.target.value) || 0 }))}
+              <input type="number" value={form.group_members === 0 ? '' : form.group_members}
+                onChange={e => setForm(f => ({ ...f, group_members: parseInt(e.target.value) || 0 }))}
                 className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Group Type</label>
+              <select value={form.group_type} onChange={e => setForm(f => ({ ...f, group_type: e.target.value }))}
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500">
+                <option value="">Select type</option>
+                {WA_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Activity Status</label>
+              <select value={form.activity_status} onChange={e => setForm(f => ({ ...f, activity_status: e.target.value }))}
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-green-500">
+                <option value="">Select status</option>
+                {WA_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
             </div>
           </div>
           <div className="flex justify-end gap-3 pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-900 bg-gray-100 rounded-xl">Cancel</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
+            <button type="submit" disabled={loading || linkInfo.type === 'duplicate'}
+              className="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-60">
               {loading && <Loader2 size={14} className="animate-spin" />} Save
             </button>
           </div>
@@ -155,7 +230,7 @@ export default function WhatsAppGroupsPage() {
           </div>
         )}
       </div>
-      {showModal && <Modal onClose={() => setShowModal(false)} group={editGroup} onSaved={load} />}
+      {showModal && <Modal onClose={() => setShowModal(false)} group={editGroup} groups={groups} onSaved={load} />}
     </div>
   );
 }
