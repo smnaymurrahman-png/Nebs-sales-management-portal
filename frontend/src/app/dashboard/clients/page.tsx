@@ -305,13 +305,12 @@ export default function ClientsPage() {
                   <th className="px-4 py-3 text-left">Client Type</th>
                   <th className="px-4 py-3 text-left">Data Type</th>
                   <th className="px-4 py-3 text-left">Msg</th>
-                  <th className="px-4 py-3 text-left">Added</th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {filtered.length === 0 && (
-                  <tr><td colSpan={11} className="py-12 text-center text-gray-400">No clients found</td></tr>
+                  <tr><td colSpan={10} className="py-12 text-center text-gray-400">No clients found</td></tr>
                 )}
                 {filtered.map(c => (
                   <tr key={c.id} className="hover:bg-gray-50/80 transition-colors">
@@ -358,7 +357,6 @@ export default function ClientsPage() {
                         <p className="text-xs text-gray-400 truncate max-w-[100px]">{c.last_message}</p>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-gray-400 text-xs">{c.added_by_name}</td>
                     <td className="px-4 py-3">
                       <div className="flex gap-1">
                         <button onClick={() => { setEditClient(c); setShowModal(true); }}
